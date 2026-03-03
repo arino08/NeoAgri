@@ -1,0 +1,50 @@
+[
+  {
+    "crop": "Corn",
+    "disease": "Healthy",
+    "cause": "No disease detected. The corn plant is growing under normal and healthy conditions",
+    "symptoms": "Leaves are green, fresh, and without spots or damage",
+    "cure": "No treatment required. Continue regular watering and proper plant care",
+    "prevention": "Maintain proper irrigation, provide sufficient sunlight, and use healthy seeds to keep the plant disease-free",
+
+    "voice": "Your corn plant is healthy. No disease is detected and the plant is growing normally. The leaves are green and fresh without any spots or damage. No treatment is required. Maintain proper irrigation and sunlight to keep the plant healthy.",
+
+    "voice_hi": "आपका मक्का का पौधा स्वस्थ है। इसमें कोई रोग नहीं पाया गया है और पौधा सामान्य रूप से बढ़ रहा है। पत्तियां हरी और ताज़ा हैं तथा उन पर कोई धब्बा या नुकसान नहीं है। किसी उपचार की आवश्यकता नहीं है। पौधे को स्वस्थ रखने के लिए उचित सिंचाई करें और पर्याप्त धूप प्रदान करें।"
+  },
+  {
+    "crop": "Corn",
+    "disease": "Northern Leaf Blight",
+    "cause": "Fungal infection caused by Exserohilum turcicum due to warm and humid conditions",
+    "symptoms": "Long gray or brown lesions on leaves and reduced photosynthesis",
+    "cure": "Apply recommended fungicide and remove infected plant debris",
+    "prevention": "Use resistant varieties, avoid overhead irrigation, and rotate crops",
+
+    "voice": "Your corn plant has Northern Leaf Blight disease. It is caused by a fungal infection due to warm and humid conditions. Symptoms include long gray or brown lesions on leaves. Apply recommended fungicide and remove infected plant debris. To prevent this disease, use resistant varieties and rotate crops.",
+
+    "voice_hi": "आपके मक्का के पौधे में नॉर्दर्न लीफ ब्लाइट रोग है। यह गर्म और नम मौसम में होने वाले फंगल संक्रमण के कारण होता है। इसके लक्षणों में पत्तियों पर लंबे भूरे या स्लेटी धब्बे दिखाई देते हैं जिससे प्रकाश संश्लेषण कम हो जाता है। अनुशंसित फंगीसाइड का छिड़काव करें और संक्रमित अवशेषों को हटा दें। इस रोग से बचाव के लिए रोग प्रतिरोधी किस्में लगाएं और फसल चक्र अपनाएं।"
+  },
+  {
+    "crop": "Corn",
+    "disease": "Cercospora Leaf Spot (Gray Leaf Spot)",
+    "cause": "Fungal infection caused by Cercospora species due to warm and humid weather",
+    "symptoms": "Rectangular gray or brown spots on leaves and leaf drying",
+    "cure": "Spray recommended fungicide and remove infected plant residues",
+    "prevention": "Ensure proper spacing, avoid overhead watering, and practice crop rotation",
+
+    "voice": "Your corn plant has Cercospora Leaf Spot also known as Gray Leaf Spot disease. It is caused by a fungal infection due to warm and humid weather. Symptoms include rectangular gray or brown spots on leaves. Spray recommended fungicide and remove infected residues. To prevent this disease, maintain proper spacing and practice crop rotation.",
+
+    "voice_hi": "आपके मक्का के पौधे में सर्कोस्पोरा लीफ स्पॉट जिसे ग्रे लीफ स्पॉट भी कहा जाता है, रोग है। यह गर्म और नम मौसम में होने वाले फंगल संक्रमण के कारण होता है। इसके लक्षणों में पत्तियों पर आयताकार भूरे या स्लेटी धब्बे दिखाई देते हैं और पत्तियां सूखने लगती हैं। अनुशंसित फंगीसाइड का छिड़काव करें और संक्रमित अवशेषों को हटा दें। इस रोग से बचाव के लिए पौधों के बीच उचित दूरी रखें और फसल चक्र अपनाएं।"
+  },
+  {
+    "crop": "Corn",
+    "disease": "Common Rust",
+    "cause": "Fungal infection caused by Puccinia sorghi due to cool and humid conditions",
+    "symptoms": "Small reddish-brown pustules on leaves and yellowing of leaf tissue",
+    "cure": "Apply recommended fungicide and remove infected plant parts",
+    "prevention": "Grow resistant varieties, avoid excess moisture, and keep the field clean from plant debris",
+
+    "voice": "Your corn plant has Common Rust disease. It is caused by a fungal infection due to cool and humid conditions. Symptoms include small reddish-brown pustules on leaves. Apply recommended fungicide and remove infected parts. To prevent this disease, use resistant varieties and keep the field clean.",
+
+    "voice_hi": "आपके मक्का के पौधे में कॉमन रस्ट रोग है। यह ठंडे और नम मौसम में होने वाले फंगल संक्रमण के कारण होता है। इसके लक्षणों में पत्तियों पर छोटे लाल-भूरे फफोले दिखाई देते हैं और पत्तियां पीली पड़ने लगती हैं। अनुशंसित फंगीसाइड का छिड़काव करें और संक्रमित भागों को हटा दें। इस रोग से बचाव के लिए रोग प्रतिरोधी किस्में लगाएं और खेत को साफ रखें।"
+  }
+]

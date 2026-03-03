@@ -1,0 +1,102 @@
+[
+  {
+    "crop": "Tomato",
+    "disease": "Late Blight",
+    "cause": "Fungal-like infection caused by Phytophthora due to high humidity and cool temperature",
+    "symptoms": "Dark brown or black spots on leaves, white mold on the underside of leaves, and rapid leaf drying",
+    "cure": "Remove infected leaves and spray recommended fungicide immediately",
+    "prevention": "Avoid excess watering, maintain proper spacing between plants, and ensure good air circulation",
+    "voice": "Your tomato plant has Late Blight disease. It is caused by a fungal-like infection due to high humidity and cool temperature. Symptoms include dark brown or black spots on leaves and rapid leaf drying. Remove infected leaves and spray recommended fungicide immediately. To prevent this disease, avoid excess watering and ensure good air circulation.",
+    "voice_hi": "आपके टमाटर के पौधे में लेट ब्लाइट रोग है। यह अधिक नमी और ठंडे तापमान के कारण होने वाला फंगल संक्रमण है। इसके लक्षण पत्तियों पर गहरे भूरे या काले धब्बे और पत्तियों का तेजी से सूखना हैं। संक्रमित पत्तियों को हटाएं और तुरंत अनुशंसित फंगीसाइड का छिड़काव करें। इस रोग से बचाव के लिए अधिक पानी देने से बचें और पौधों के बीच उचित दूरी रखें।"
+  },
+  {
+    "crop": "Tomato",
+    "disease": "Healthy",
+    "cause": "No disease detected. The plant is growing under normal and healthy conditions",
+    "symptoms": "Leaves are green, fresh, and without spots or damage",
+    "cure": "No treatment required. Continue regular watering and care",
+    "prevention": "Maintain proper irrigation, sunlight, and use healthy seeds to keep the plant disease-free",
+    "voice": "Your tomato plant is healthy. No disease is detected and the plant is growing under normal conditions. The leaves are green and fresh without any spots or damage. No treatment is required. Maintain proper irrigation, sunlight, and use healthy seeds to keep the plant disease-free.",
+    "voice_hi": "आपका टमाटर का पौधा स्वस्थ है। इसमें कोई रोग नहीं पाया गया है और पौधा सामान्य रूप से बढ़ रहा है। पत्तियां हरी और ताजा हैं तथा उन पर कोई धब्बा नहीं है। किसी उपचार की आवश्यकता नहीं है। पौधे को स्वस्थ रखने के लिए उचित सिंचाई, धूप और अच्छे बीजों का उपयोग करें।"
+  },
+  {
+    "crop": "Tomato",
+    "disease": "Early Blight",
+    "cause": "Fungal infection caused by Alternaria due to warm and humid conditions",
+    "symptoms": "Brown circular spots with yellow rings on older leaves and gradual leaf drying",
+    "cure": "Remove infected leaves and spray recommended fungicide every 7 days",
+    "prevention": "Avoid overhead watering, use disease-free seeds, and maintain proper plant spacing",
+    "voice": "Your tomato plant has Early Blight disease. It is caused by a fungal infection due to warm and humid conditions. Symptoms include brown circular spots with yellow rings and gradual leaf drying. Remove infected leaves and spray recommended fungicide every seven days. To prevent this disease, avoid overhead watering and maintain proper plant spacing.",
+    "voice_hi": "आपके टमाटर के पौधे में अर्ली ब्लाइट रोग है। यह गर्म और नम मौसम में होने वाला फंगल संक्रमण है। इसके लक्षण पत्तियों पर भूरे गोल धब्बे और पीले छल्ले हैं। संक्रमित पत्तियों को हटाएं और हर सात दिन में फंगीसाइड का छिड़काव करें। इस रोग से बचाव के लिए ऊपर से पानी न डालें और पौधों के बीच उचित दूरी रखें।"
+  },
+  {
+    "crop": "Tomato",
+    "disease": "Septoria Leaf Spot",
+    "cause": "Fungal infection caused by Septoria due to wet and humid conditions",
+    "symptoms": "Small brown spots with dark edges and yellowing of leaves, starting from lower leaves",
+    "cure": "Remove infected leaves and apply recommended fungicide regularly",
+    "prevention": "Avoid overhead watering, keep plants well spaced, and remove plant debris from soil",
+    "voice": "Your tomato plant has Septoria Leaf Spot disease. It is caused by a fungal infection due to wet and humid conditions. Symptoms include small brown spots with dark edges and yellowing of leaves starting from the lower part of the plant. Remove infected leaves and apply recommended fungicide regularly. To prevent this disease, avoid overhead watering and remove plant debris from the soil.",
+    "voice_hi": "आपके टमाटर के पौधे में सेप्टोरिया लीफ स्पॉट रोग है। यह गीले और नम मौसम में होने वाला फंगल संक्रमण है। इसके लक्षण निचली पत्तियों से शुरू होने वाले छोटे भूरे धब्बे और पत्तियों का पीला होना हैं। संक्रमित पत्तियों को हटाएं और नियमित रूप से फंगीसाइड का छिड़काव करें। इस रोग से बचाव के लिए ऊपर से पानी न डालें और खेत को साफ रखें।"
+  },
+  {
+    "crop": "Tomato",
+    "disease": "Tomato Yellow Leaf Curl Virus",
+    "cause": "Viral infection spread mainly by whiteflies in warm conditions",
+    "symptoms": "Yellowing and curling of leaves, stunted plant growth, and reduced fruit production",
+    "cure": "Remove and destroy infected plants and control whiteflies using recommended insecticides",
+    "prevention": "Use virus-free seeds, control insect pests, and avoid planting near infected crops",
+    "voice": "Your tomato plant has Tomato Yellow Leaf Curl Virus disease. It is caused by a viral infection spread mainly by whiteflies. Symptoms include yellowing and curling of leaves and stunted plant growth. Remove and destroy infected plants and control whiteflies using recommended insecticides. To prevent this disease, use virus-free seeds and avoid planting near infected crops.",
+    "voice_hi": "आपके टमाटर के पौधे में येलो लीफ कर्ल वायरस रोग है। यह सफेद मक्खी द्वारा फैलने वाला वायरल संक्रमण है। इसके लक्षण पत्तियों का पीला होना, मुड़ना और पौधे की वृद्धि रुकना हैं। संक्रमित पौधों को नष्ट करें और कीटनाशकों से सफेद मक्खी को नियंत्रित करें। इस रोग से बचाव के लिए स्वस्थ बीजों का उपयोग करें और संक्रमित फसलों के पास न लगाएं।"
+  },
+  {
+    "crop": "Tomato",
+    "disease": "Bacterial Spot",
+    "cause": "Bacterial infection spread through contaminated water, tools, and seeds",
+    "symptoms": "Small dark spots on leaves and fruits with yellow halos and leaf drop",
+    "cure": "Remove infected plant parts and spray recommended bactericide",
+    "prevention": "Use disease-free seeds, avoid working in wet fields, and disinfect farming tools",
+    "voice": "Your tomato plant has Bacterial Spot disease. It is caused by bacterial infection spread through contaminated water, tools, and seeds. Symptoms include small dark spots on leaves and fruits with yellow halos and leaf drop. Remove infected plant parts and spray recommended bactericide. To prevent this disease, use disease-free seeds and disinfect farming tools.",
+    "voice_hi": "आपके टमाटर के पौधे में बैक्टीरियल स्पॉट रोग है। यह संक्रमित पानी, औजारों और बीजों से फैलता है। इसके लक्षण पत्तियों और फलों पर छोटे काले धब्बे और पत्तियों का गिरना हैं। संक्रमित भागों को हटाएं और बैक्टीरिसाइड का छिड़काव करें। इस रोग से बचाव के लिए स्वस्थ बीजों का उपयोग करें और औजारों को साफ रखें।"
+  },
+  {
+    "crop": "Tomato",
+    "disease": "Target Spot",
+    "cause": "Fungal infection caused by Corynespora due to warm and humid conditions",
+    "symptoms": "Brown circular spots with concentric rings on leaves and yellowing around the spots",
+    "cure": "Remove infected leaves and spray recommended fungicide regularly",
+    "prevention": "Avoid overhead watering, ensure good air circulation, and keep the field clean from plant debris",
+    "voice": "Your tomato plant has Target Spot disease. It is caused by a fungal infection due to warm and humid conditions. Symptoms include brown circular spots with rings on leaves. Remove infected leaves and spray recommended fungicide regularly. To prevent this disease, ensure good air circulation and keep the field clean.",
+    "voice_hi": "आपके टमाटर के पौधे में टारगेट स्पॉट रोग है। यह गर्म और नम मौसम में होने वाला फंगल संक्रमण है। इसके लक्षण पत्तियों पर गोल भूरे धब्बे हैं। संक्रमित पत्तियों को हटाएं और नियमित रूप से फंगीसाइड का छिड़काव करें। इस रोग से बचाव के लिए हवा का अच्छा संचार रखें और खेत को साफ रखें।"
+  },
+  {
+    "crop": "Tomato",
+    "disease": "Tomato Mosaic Virus",
+    "cause": "Viral infection spread through infected seeds, tools, hands, and plant contact",
+    "symptoms": "Mosaic pattern of light and dark green patches on leaves, leaf curling, and stunted growth",
+    "cure": "Remove and destroy infected plants and disinfect tools regularly",
+    "prevention": "Use certified disease-free seeds, wash hands after handling plants, and avoid touching healthy plants after infected ones",
+    "voice": "Your tomato plant has Tomato Mosaic Virus disease. It is caused by a viral infection spread through infected seeds, tools, and plant contact. Symptoms include mosaic patterns on leaves and stunted growth. Remove and destroy infected plants and disinfect tools regularly. To prevent this disease, use certified disease-free seeds and avoid touching healthy plants after infected ones.",
+    "voice_hi": "आपके टमाटर के पौधे में टोमैटो मोज़ेक वायरस रोग है। यह संक्रमित बीजों, औजारों और पौधों के संपर्क से फैलता है। इसके लक्षण पत्तियों पर हल्के और गहरे हरे रंग के धब्बे और पौधे की वृद्धि रुकना हैं। संक्रमित पौधों को नष्ट करें और औजारों को कीटाणुरहित करें। इस रोग से बचाव के लिए प्रमाणित बीजों का उपयोग करें।"
+  },
+  {
+    "crop": "Tomato",
+    "disease": "Leaf Mold",
+    "cause": "Fungal infection caused by high humidity and poor air circulation",
+    "symptoms": "Yellow spots on upper leaf surface and olive-green mold on underside of leaves",
+    "cure": "Remove infected leaves and apply recommended fungicide",
+    "prevention": "Reduce humidity, improve air circulation, and avoid wetting the leaves while watering",
+    "voice": "Your tomato plant has Leaf Mold disease. It is caused by a fungal infection due to high humidity and poor air circulation. Symptoms include yellow spots on leaves and mold on the underside of leaves. Remove infected leaves and apply recommended fungicide. To prevent this disease, reduce humidity and avoid wetting the leaves while watering.",
+    "voice_hi": "आपके टमाटर के पौधे में लीफ मोल्ड रोग है। यह अधिक नमी और हवा के खराब संचार के कारण होता है। इसके लक्षण पत्तियों पर पीले धब्बे और नीचे हरी फफूंद हैं। संक्रमित पत्तियों को हटाएं और फंगीसाइड का छिड़काव करें। इस रोग से बचाव के लिए नमी कम रखें और पत्तियों को गीला न करें।"
+  },
+  {
+    "crop": "Tomato",
+    "disease": "Two-Spotted Spider Mite",
+    "cause": "Pest infestation caused by spider mites in hot and dry conditions",
+    "symptoms": "Tiny yellow or white spots on leaves, webbing on the underside of leaves, and leaf drying",
+    "cure": "Spray recommended miticide or insecticidal soap and wash leaves with water",
+    "prevention": "Maintain proper moisture, regularly inspect plants, and avoid dusty conditions",
+    "voice": "Your tomato plant has Two-Spotted Spider Mite infestation. It is caused by pests in hot and dry conditions. Symptoms include small yellow or white spots and webbing under the leaves. Spray recommended miticide or insecticidal soap and wash leaves with water. To prevent this problem, maintain proper moisture and inspect plants regularly.",
+    "voice_hi": "आपके टमाटर के पौधे में दो धब्बों वाला स्पाइडर माइट कीट लगा है। यह गर्म और सूखे मौसम में फैलता है। इसके लक्षण पत्तियों पर छोटे पीले धब्बे और जाल बनना हैं। कीटनाशक या साबुन वाले घोल का छिड़काव करें और पत्तियों को पानी से धोएं। इस कीट से बचाव के लिए नमी बनाए रखें और पौधों की नियमित जांच करें।"
+  }
+]

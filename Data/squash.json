@@ -1,0 +1,14 @@
+[
+  {
+    "crop": "Squash",
+    "disease": "Powdery Mildew",
+    "cause": "Fungal infection caused by powdery mildew fungi due to warm and humid conditions",
+    "symptoms": "White powdery patches on leaves and stems, leaf yellowing, and reduced plant growth",
+    "cure": "Remove infected leaves and spray recommended fungicide or sulfur-based treatment",
+    "prevention": "Ensure good air circulation, avoid overcrowding, and inspect plants regularly",
+
+    "voice": "Your squash plant has Powdery Mildew disease. It is caused by a fungal infection due to warm and humid conditions. Symptoms include white powdery patches on leaves and stems and leaf yellowing. Remove infected leaves and spray recommended fungicide. To prevent this disease, ensure good air circulation and inspect plants regularly.",
+
+    "voice_hi": "आपके स्क्वैश के पौधे में पाउडरी मिल्ड्यू रोग है। यह गर्म और नम मौसम में होने वाले फंगल संक्रमण के कारण होता है। इसके लक्षणों में पत्तियों और तनों पर सफेद पाउडर जैसा पदार्थ दिखाई देना और पत्तियों का पीला होना शामिल है। संक्रमित पत्तियों को हटाएं और अनुशंसित फंगीसाइड या सल्फर आधारित दवा का छिड़काव करें। इस रोग से बचाव के लिए पौधों के बीच हवा का अच्छा संचार रखें और नियमित रूप से निरीक्षण करें।"
+  }
+]

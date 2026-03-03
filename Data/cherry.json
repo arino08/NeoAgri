@@ -1,0 +1,26 @@
+[
+  {
+    "crop": "Cherry",
+    "disease": "Healthy",
+    "cause": "No disease detected. The cherry plant is growing under normal and healthy conditions",
+    "symptoms": "Leaves are green, fresh, and without spots, damage, or discoloration",
+    "cure": "No treatment required. Continue regular watering and proper plant care",
+    "prevention": "Maintain proper irrigation, provide sufficient sunlight, and use healthy planting material to keep the plant disease-free",
+
+    "voice": "Your cherry plant is healthy. No disease is detected and the plant is growing normally. The leaves are green and fresh without any spots or damage. No treatment is required. Maintain proper irrigation and sunlight to keep the plant healthy.",
+
+    "voice_hi": "आपका चेरी का पौधा स्वस्थ है। इसमें कोई रोग नहीं पाया गया है और पौधा सामान्य रूप से बढ़ रहा है। पत्तियां हरी और ताज़ा हैं तथा उन पर कोई धब्बा या नुकसान नहीं है। किसी उपचार की आवश्यकता नहीं है। पौधे को स्वस्थ रखने के लिए उचित सिंचाई करें और पर्याप्त धूप प्रदान करें।"
+  },
+  {
+    "crop": "Cherry",
+    "disease": "Powdery Mildew",
+    "cause": "Fungal infection caused by Podosphaera species due to warm and dry conditions with high humidity",
+    "symptoms": "White powdery coating on leaves and shoots, leaf curling, and reduced growth",
+    "cure": "Remove infected leaves and apply recommended fungicide or sulfur spray",
+    "prevention": "Ensure good air circulation, avoid overcrowding, and monitor plants regularly",
+
+    "voice": "Your cherry plant has Powdery Mildew disease. It is caused by a fungal infection due to warm and humid conditions. Symptoms include white powdery coating on leaves and leaf curling. Remove infected leaves and spray recommended fungicide. To prevent this disease, ensure good air circulation and avoid overcrowding.",
+
+    "voice_hi": "आपके चेरी के पौधे में पाउडरी मिल्ड्यू रोग है। यह गर्म और नम मौसम में होने वाले फंगल संक्रमण के कारण होता है। इसके लक्षणों में पत्तियों और नई टहनियों पर सफेद पाउडर जैसी परत दिखाई देती है और पत्तियां मुड़ने लगती हैं। संक्रमित पत्तियों को हटाएं और अनुशंसित फंगीसाइड या सल्फर स्प्रे का छिड़काव करें। इस रोग से बचाव के लिए पौधों के बीच हवा का अच्छा संचार रखें और अधिक भीड़ से बचें।"
+  }
+]

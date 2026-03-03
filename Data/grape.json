@@ -1,0 +1,50 @@
+[
+  {
+    "crop": "Grape",
+    "disease": "Healthy",
+    "cause": "No disease detected. The grape plant is growing under normal and healthy conditions",
+    "symptoms": "Leaves are green, fresh, and without spots, discoloration, or damage",
+    "cure": "No treatment required. Continue regular watering and proper plant care",
+    "prevention": "Maintain proper irrigation, provide sufficient sunlight, and use healthy planting material to keep the plant disease-free",
+
+    "voice": "Your grape plant is healthy. No disease is detected and the plant is growing under normal and healthy conditions. The leaves are green, fresh, and free from any spots or damage. No treatment is required at this time. To keep the plant healthy, maintain proper irrigation, ensure sufficient sunlight, and use good quality planting material to prevent future diseases.",
+
+    "voice_hi": "आपका अंगूर का पौधा स्वस्थ है। इसमें कोई रोग नहीं पाया गया है और पौधा सामान्य रूप से बढ़ रहा है। पत्तियां हरी और ताज़ा हैं तथा उन पर कोई धब्बा या नुकसान नहीं है। किसी उपचार की आवश्यकता नहीं है। पौधे को स्वस्थ रखने के लिए उचित सिंचाई करें, पर्याप्त धूप दें और अच्छी गुणवत्ता वाली पौध सामग्री का उपयोग करें।"
+  },
+  {
+    "crop": "Grape",
+    "disease": "Leaf Blight (Isariopsis Leaf Spot)",
+    "cause": "Fungal infection caused by Isariopsis species due to warm and humid conditions",
+    "symptoms": "Small brown or dark spots on leaves that gradually enlarge and cause leaf blight and drying",
+    "cure": "Remove and destroy infected leaves and spray recommended fungicide at regular intervals",
+    "prevention": "Ensure good air circulation, avoid overhead watering, and keep the field clean from plant debris",
+
+    "voice": "Your grape plant has Leaf Blight also known as Isariopsis Leaf Spot. It is caused by a fungal infection due to warm and humid conditions. Symptoms include small brown or dark spots on leaves that gradually increase in size and cause leaf blight and drying. Remove and destroy infected leaves and spray recommended fungicide regularly. To prevent this disease, ensure good air circulation, avoid overhead watering, and keep the field clean from plant debris.",
+
+    "voice_hi": "आपके अंगूर के पौधे में लीफ ब्लाइट जिसे इसैरिओप्सिस लीफ स्पॉट भी कहा जाता है, रोग पाया गया है। यह गर्म और नम मौसम में होने वाले फंगल संक्रमण के कारण होता है। इसके लक्षणों में पत्तियों पर छोटे भूरे या काले धब्बे दिखाई देते हैं जो धीरे-धीरे बड़े होकर पत्तियों को सुखा देते हैं। संक्रमित पत्तियों को हटाएं और नियमित रूप से अनुशंसित फंगीसाइड का छिड़काव करें। इस रोग से बचाव के लिए हवा का अच्छा संचार रखें, ऊपर से पानी देने से बचें और खेत को साफ रखें।"
+  },
+  {
+    "crop": "Grape",
+    "disease": "Black Rot",
+    "cause": "Fungal infection caused by Guignardia species due to warm and humid weather conditions",
+    "symptoms": "Small brown circular spots on leaves with dark borders, black shriveled fruits, and premature fruit drop",
+    "cure": "Remove and destroy infected leaves and fruits and apply recommended fungicide regularly",
+    "prevention": "Ensure good air circulation, avoid overhead irrigation, prune infected parts, and keep the vineyard clean from plant debris",
+
+    "voice": "Your grape plant has Black Rot disease. It is caused by a fungal infection due to warm and humid weather conditions. Symptoms include brown circular spots on leaves and black shriveled fruits that may fall early. Remove and destroy infected leaves and fruits and apply recommended fungicide regularly. To prevent this disease, ensure good air circulation, avoid overhead watering, prune infected parts, and keep the vineyard clean from plant debris.",
+
+    "voice_hi": "आपके अंगूर के पौधे में ब्लैक रॉट रोग है। यह गर्म और नम मौसम में होने वाले फंगल संक्रमण के कारण होता है। इसके लक्षणों में पत्तियों पर भूरे गोल धब्बे और फलों का काला होकर सिकुड़ जाना तथा समय से पहले गिरना शामिल है। संक्रमित पत्तियों और फलों को हटाएं और नियमित रूप से अनुशंसित फंगीसाइड का छिड़काव करें। इस रोग से बचाव के लिए हवा का अच्छा संचार रखें, ऊपर से सिंचाई से बचें, संक्रमित भागों की छंटाई करें और बाग को साफ रखें।"
+  },
+  {
+    "crop": "Grape",
+    "disease": "Esca (Black Measles)",
+    "cause": "Fungal infection caused by multiple fungi that infect the wood of the grapevine, mainly through pruning wounds",
+    "symptoms": "Dark purple or black spots on leaves and fruits, leaf scorching, reduced growth, and sudden vine decline",
+    "cure": "Remove and destroy infected vines and apply recommended fungicide or protective paste on pruning wounds",
+    "prevention": "Avoid pruning during wet conditions, disinfect pruning tools, and use disease-free planting material",
+
+    "voice": "Your grape plant has Esca also known as Black Measles disease. It is caused by a fungal infection that enters through pruning wounds. Symptoms include dark purple or black spots on leaves and fruits, leaf scorching, and reduced plant growth. Remove and destroy infected vines and apply recommended fungicide on pruning wounds. To prevent this disease, avoid pruning in wet conditions, disinfect tools, and use healthy planting material.",
+
+    "voice_hi": "आपके अंगूर के पौधे में एस्का जिसे ब्लैक मीसल्स रोग भी कहा जाता है, पाया गया है। यह रोग छंटाई के घावों के माध्यम से लकड़ी में प्रवेश करने वाले फंगल संक्रमण के कारण होता है। इसके लक्षणों में पत्तियों और फलों पर गहरे बैंगनी या काले धब्बे, पत्तियों का झुलसना और पौधे की वृद्धि का कम होना शामिल है। संक्रमित बेलों को हटाएं और छंटाई के घावों पर अनुशंसित फंगीसाइड या सुरक्षात्मक पेस्ट लगाएं। इस रोग से बचाव के लिए गीले मौसम में छंटाई से बचें, औजारों को कीटाणुरहित करें और रोग-मुक्त पौध सामग्री का उपयोग करें।"
+  }
+]
