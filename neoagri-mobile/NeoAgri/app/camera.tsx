@@ -10,9 +10,10 @@ import {
 } from 'react-native';
 import { useRouter } from 'expo-router';
 import { CameraView, useCameraPermissions } from 'expo-camera';
+import * as ImagePicker from 'expo-image-picker';
 import { COLORS, TYPOGRAPHY, SPACING, RADIUS, SHADOWS } from '../constants/theme';
 
-const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window');
+const { width: SCREEN_WIDTH } = Dimensions.get('window');
 const BOX_SIZE = SCREEN_WIDTH * 0.7;
 
 export default function CameraScreen() {
@@ -49,6 +50,26 @@ export default function CameraScreen() {
     }
   };
 
+  const handleGalleryPick = async () => {
+    try {
+      const result = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ['images'],
+        allowsEditing: true,
+        aspect: [1, 1],
+        quality: 0.8,
+      });
+
+      if (!result.canceled && result.assets[0]) {
+        router.push({
+          pathname: '/processing',
+          params: { photoUri: result.assets[0].uri },
+        });
+      }
+    } catch (error) {
+      Alert.alert('Error', 'Failed to pick image from gallery.');
+    }
+  };
+
   const handleVoice = () => {
     Alert.alert(
       '🎙️ Coming Soon',
@@ -76,18 +97,22 @@ export default function CameraScreen() {
         <TouchableOpacity style={styles.permissionButton} onPress={requestPermission}>
           <Text style={styles.permissionButtonText}>Allow Camera</Text>
         </TouchableOpacity>
+        <TouchableOpacity
+          style={[styles.permissionButton, styles.galleryFallbackBtn]}
+          onPress={handleGalleryPick}
+        >
+          <Text style={[styles.permissionButtonText, { color: COLORS.primary }]}>
+            📁 Pick from Gallery Instead
+          </Text>
+        </TouchableOpacity>
       </View>
     );
   }
 
   return (
     <View style={styles.container}>
-      <CameraView
-        ref={cameraRef}
-        style={styles.camera}
-        facing="back"
-      >
-        {/* Top instruction bar */}
+      <CameraView ref={cameraRef} style={styles.camera} facing="back">
+        {/* Top bar */}
         <View style={styles.topBar}>
           <View style={styles.topBarBg}>
             <Text style={styles.instructionText}>
@@ -99,7 +124,6 @@ export default function CameraScreen() {
         {/* Bounding box overlay */}
         <View style={styles.overlayCenter}>
           <View style={styles.boundingBox}>
-            {/* Corner markers */}
             <View style={[styles.corner, styles.cornerTL]} />
             <View style={[styles.corner, styles.cornerTR]} />
             <View style={[styles.corner, styles.cornerBL]} />
@@ -109,15 +133,16 @@ export default function CameraScreen() {
 
         {/* Bottom controls */}
         <View style={styles.bottomControls}>
-          {/* Settings placeholder for balance */}
+          {/* Gallery button */}
           <View style={styles.sideButton}>
             <TouchableOpacity
-              style={styles.settingsBtn}
-              onPress={() => router.push('/language')}
+              style={styles.galleryBtn}
+              onPress={handleGalleryPick}
+              activeOpacity={0.7}
             >
-              <Text style={styles.settingsIcon}>🌐</Text>
+              <Text style={styles.sideIcon}>🖼️</Text>
             </TouchableOpacity>
-            <Text style={styles.sideLabel}>Language</Text>
+            <Text style={styles.sideLabel}>Gallery</Text>
           </View>
 
           {/* Shutter button */}
@@ -138,17 +163,36 @@ export default function CameraScreen() {
             <Text style={styles.shutterLabel}>SCAN</Text>
           </View>
 
-          {/* Voice button */}
+          {/* History button */}
           <View style={styles.sideButton}>
             <TouchableOpacity
-              style={styles.voiceBtn}
-              onPress={handleVoice}
+              style={styles.historyBtn}
+              onPress={() => router.push('/history')}
               activeOpacity={0.7}
             >
-              <Text style={styles.voiceIcon}>🎙️</Text>
+              <Text style={styles.sideIcon}>📋</Text>
             </TouchableOpacity>
-            <Text style={styles.sideLabel}>Voice</Text>
+            <Text style={styles.sideLabel}>History</Text>
           </View>
+        </View>
+
+        {/* Secondary row */}
+        <View style={styles.secondaryRow}>
+          <TouchableOpacity
+            style={styles.secondaryBtn}
+            onPress={() => router.push('/language')}
+          >
+            <Text style={styles.secondaryIcon}>🌐</Text>
+            <Text style={styles.secondaryLabel}>Language</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={styles.secondaryBtn}
+            onPress={handleVoice}
+          >
+            <Text style={styles.secondaryIcon}>🎙️</Text>
+            <Text style={styles.secondaryLabel}>Voice</Text>
+          </TouchableOpacity>
         </View>
       </CameraView>
     </View>
@@ -195,10 +239,18 @@ const styles = StyleSheet.create({
     borderBottomWidth: 4,
     borderBottomColor: COLORS.primaryDark,
     ...SHADOWS.button3D,
+    marginBottom: SPACING.md,
   },
   permissionButtonText: {
     ...TYPOGRAPHY.bodyBold,
     color: COLORS.textLight,
+  },
+  galleryFallbackBtn: {
+    backgroundColor: COLORS.background,
+    borderWidth: 2,
+    borderColor: COLORS.primary,
+    borderBottomColor: COLORS.primary,
+    ...SHADOWS.small,
   },
   // Top bar
   topBar: {
@@ -276,10 +328,10 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-around',
     alignItems: 'flex-end',
-    paddingBottom: Platform.OS === 'android' ? 32 : 48,
     paddingHorizontal: SPACING.lg,
-    backgroundColor: 'rgba(0,0,0,0.4)',
+    backgroundColor: 'rgba(0,0,0,0.5)',
     paddingTop: SPACING.lg,
+    paddingBottom: SPACING.sm,
   },
   // Shutter
   shutterContainer: {
@@ -323,7 +375,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     minWidth: 64,
   },
-  settingsBtn: {
+  galleryBtn: {
     width: 56,
     height: 56,
     borderRadius: 28,
@@ -333,10 +385,7 @@ const styles = StyleSheet.create({
     borderWidth: 2,
     borderColor: 'rgba(255,255,255,0.3)',
   },
-  settingsIcon: {
-    fontSize: 24,
-  },
-  voiceBtn: {
+  historyBtn: {
     width: 56,
     height: 56,
     borderRadius: 28,
@@ -347,7 +396,7 @@ const styles = StyleSheet.create({
     borderColor: 'rgba(255,255,255,0.3)',
     ...SHADOWS.medium,
   },
-  voiceIcon: {
+  sideIcon: {
     fontSize: 24,
   },
   sideLabel: {
@@ -355,5 +404,30 @@ const styles = StyleSheet.create({
     color: '#FFFFFF',
     marginTop: SPACING.xs,
     fontSize: 12,
+  },
+  // Secondary row
+  secondaryRow: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    gap: SPACING.xl,
+    backgroundColor: 'rgba(0,0,0,0.5)',
+    paddingVertical: SPACING.sm,
+    paddingBottom: Platform.OS === 'android' ? 24 : 40,
+  },
+  secondaryBtn: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: 'rgba(255,255,255,0.15)',
+    paddingVertical: SPACING.xs,
+    paddingHorizontal: SPACING.md,
+    borderRadius: RADIUS.full,
+    gap: SPACING.xs,
+  },
+  secondaryIcon: {
+    fontSize: 16,
+  },
+  secondaryLabel: {
+    ...TYPOGRAPHY.caption,
+    color: '#FFFFFF',
   },
 });

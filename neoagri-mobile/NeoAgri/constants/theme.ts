@@ -2,6 +2,7 @@ export const COLORS = {
   primary: '#2E7D32',
   primaryDark: '#1B5E20',
   primaryLight: '#4CAF50',
+  primaryLighter: '#C8E6C9',
   accent: '#FF8F00',
   accentDark: '#E65100',
   background: '#FFFFFF',
@@ -12,8 +13,10 @@ export const COLORS = {
   textLight: '#FFFFFF',
   border: '#E0E0E0',
   success: '#388E3C',
+  successLight: '#E8F5E9',
   warning: '#F57F17',
   danger: '#C62828',
+  dangerLight: '#FFEBEE',
   overlay: 'rgba(0,0,0,0.5)',
   shadow: '#000000',
 };
@@ -48,6 +51,11 @@ export const TYPOGRAPHY = {
     fontSize: 16,
     fontWeight: '500' as const,
     lineHeight: 22,
+  },
+  caption: {
+    fontSize: 14,
+    fontWeight: '400' as const,
+    lineHeight: 20,
   },
 };
 
@@ -107,33 +115,3 @@ export const LANGUAGES = [
   { code: 'ta', name: 'Tamil', nativeName: 'தமிழ்' },
   { code: 'kn', name: 'Kannada', nativeName: 'ಕನ್ನಡ' },
 ];
-
-export const MOCK_RESULT = {
-  en: {
-    disease: 'Late Blight',
-    confidence: 94,
-    severity: 'Moderate',
-    remedy: 'Mancozeb Fungicide',
-    dosage: 'Mix 2 grams in 1 liter of water',
-    instructions: 'Spray on affected leaves every 7 days. Repeat 3 times.',
-    prevention: 'Avoid overhead irrigation. Remove infected leaves immediately.',
-  },
-  hi: {
-    disease: 'झुलसा रोग (लेट ब्लाइट)',
-    confidence: 94,
-    severity: 'मध्यम',
-    remedy: 'मैंकोजेब फफूंदनाशक',
-    dosage: '2 ग्राम को 1 लीटर पानी में मिलाएं',
-    instructions: 'प्रभावित पत्तियों पर हर 7 दिन छिड़काव करें। 3 बार दोहराएं।',
-    prevention: 'ऊपर से सिंचाई से बचें। संक्रमित पत्तियों को तुरंत हटाएं।',
-  },
-  mr: {
-    disease: 'करपा रोग (लेट ब्लाइट)',
-    confidence: 94,
-    severity: 'मध्यम',
-    remedy: 'मॅन्कोझेब बुरशीनाशक',
-    dosage: '2 ग्रॅम 1 लिटर पाण्यात मिसळा',
-    instructions: 'प्रभावित पानांवर दर 7 दिवसांनी फवारणी करा। 3 वेळा पुन्हा करा।',
-    prevention: 'वरून पाणी देणे टाळा। बाधित पाने लगेच काढून टाका।',
-  },
-};

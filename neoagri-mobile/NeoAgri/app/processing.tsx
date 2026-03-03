@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import {
   View,
   Text,
@@ -7,18 +7,25 @@ import {
   Animated,
   Easing,
   Dimensions,
-  Platform,
+  TouchableOpacity,
 } from 'react-native';
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import * as Speech from 'expo-speech';
 import { COLORS, TYPOGRAPHY, SPACING, RADIUS, SHADOWS } from '../constants/theme';
+import { runInference } from '../services/inference';
+import { PredictionResult } from '../types';
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 const IMAGE_SIZE = SCREEN_WIDTH * 0.65;
 
+type Step = 'captured' | 'preprocessing' | 'analyzing' | 'done' | 'error';
+
 export default function ProcessingScreen() {
   const router = useRouter();
   const { photoUri } = useLocalSearchParams<{ photoUri: string }>();
+
+  const [currentStep, setCurrentStep] = useState<Step>('captured');
+  const [errorMsg, setErrorMsg] = useState('');
 
   const scanLineY = useRef(new Animated.Value(0)).current;
   const pulseScale = useRef(new Animated.Value(1)).current;
@@ -45,7 +52,7 @@ export default function ProcessingScreen() {
       ])
     ).start();
 
-    // Pulse animation for the image border
+    // Pulse animation
     Animated.loop(
       Animated.sequence([
         Animated.timing(pulseScale, {
@@ -63,47 +70,20 @@ export default function ProcessingScreen() {
       ])
     ).start();
 
-    // Loading dots animation
-    const animateDots = () => {
-      Animated.loop(
-        Animated.sequence([
-          Animated.timing(dotOpacity1, {
-            toValue: 1,
-            duration: 300,
-            useNativeDriver: true,
-          }),
-          Animated.timing(dotOpacity2, {
-            toValue: 1,
-            duration: 300,
-            useNativeDriver: true,
-          }),
-          Animated.timing(dotOpacity3, {
-            toValue: 1,
-            duration: 300,
-            useNativeDriver: true,
-          }),
-          Animated.delay(400),
-          Animated.parallel([
-            Animated.timing(dotOpacity1, {
-              toValue: 0,
-              duration: 200,
-              useNativeDriver: true,
-            }),
-            Animated.timing(dotOpacity2, {
-              toValue: 0,
-              duration: 200,
-              useNativeDriver: true,
-            }),
-            Animated.timing(dotOpacity3, {
-              toValue: 0,
-              duration: 200,
-              useNativeDriver: true,
-            }),
-          ]),
-        ])
-      ).start();
-    };
-    animateDots();
+    // Loading dots
+    Animated.loop(
+      Animated.sequence([
+        Animated.timing(dotOpacity1, { toValue: 1, duration: 300, useNativeDriver: true }),
+        Animated.timing(dotOpacity2, { toValue: 1, duration: 300, useNativeDriver: true }),
+        Animated.timing(dotOpacity3, { toValue: 1, duration: 300, useNativeDriver: true }),
+        Animated.delay(400),
+        Animated.parallel([
+          Animated.timing(dotOpacity1, { toValue: 0, duration: 200, useNativeDriver: true }),
+          Animated.timing(dotOpacity2, { toValue: 0, duration: 200, useNativeDriver: true }),
+          Animated.timing(dotOpacity3, { toValue: 0, duration: 200, useNativeDriver: true }),
+        ]),
+      ])
+    ).start();
 
     // Voice prompt
     const speechTimer = setTimeout(() => {
@@ -113,25 +93,73 @@ export default function ProcessingScreen() {
       });
     }, 500);
 
-    // Navigate to result after simulated processing
-    const navTimer = setTimeout(() => {
-      router.replace({
-        pathname: '/result',
-        params: { photoUri: photoUri },
-      });
-    }, 4000);
+    // Run real on-device inference
+    runRealInference();
 
     return () => {
       clearTimeout(speechTimer);
-      clearTimeout(navTimer);
       Speech.stop();
     };
   }, []);
 
+  const runRealInference = async () => {
+    try {
+      setCurrentStep('preprocessing');
+
+      // Small delay for UI feedback
+      await new Promise((r) => setTimeout(r, 500));
+      setCurrentStep('analyzing');
+
+      const result = await runInference(photoUri);
+
+      setCurrentStep('done');
+
+      // Brief pause to show "done" state
+      await new Promise((r) => setTimeout(r, 600));
+
+      Speech.stop();
+
+      // Navigate to result with the prediction data
+      router.replace({
+        pathname: '/result',
+        params: {
+          photoUri,
+          prediction: JSON.stringify(result),
+        },
+      });
+    } catch (error: any) {
+      console.error('[NeoAgri] Inference error:', error);
+      setCurrentStep('error');
+      setErrorMsg(error.message || 'An error occurred during analysis.');
+      Speech.stop();
+    }
+  };
+
+  const handleRetry = () => {
+    setCurrentStep('captured');
+    setErrorMsg('');
+    runRealInference();
+  };
+
+  const handleGoBack = () => {
+    Speech.stop();
+    router.replace('/camera');
+  };
+
+  const getStepIcon = (step: Step, targetStep: Step): string => {
+    const order: Step[] = ['captured', 'preprocessing', 'analyzing', 'done'];
+    const currentIdx = order.indexOf(currentStep);
+    const targetIdx = order.indexOf(targetStep);
+
+    if (currentStep === 'error' && targetIdx >= order.indexOf('analyzing')) return '❌';
+    if (currentIdx > targetIdx) return '✅';
+    if (currentIdx === targetIdx) return '🔄';
+    return '⏳';
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.content}>
-        {/* Magnifying glass icon */}
         <Text style={styles.magnifyIcon}>🔬</Text>
 
         {/* Image with scan overlay */}
@@ -149,47 +177,88 @@ export default function ProcessingScreen() {
             </View>
           )}
 
-          {/* Scan line */}
-          <Animated.View
-            style={[
-              styles.scanLine,
-              { transform: [{ translateY: scanLineY }] },
-            ]}
-          />
+          {currentStep !== 'error' && currentStep !== 'done' && (
+            <Animated.View
+              style={[
+                styles.scanLine,
+                { transform: [{ translateY: scanLineY }] },
+              ]}
+            />
+          )}
         </Animated.View>
 
         {/* Status text */}
         <View style={styles.statusContainer}>
-          <Text style={styles.statusTitle}>Analyzing Your Plant</Text>
-          <View style={styles.dotsRow}>
-            <Text style={styles.statusSubtext}>Please wait</Text>
-            <Animated.Text style={[styles.dot, { opacity: dotOpacity1 }]}>
-              .
-            </Animated.Text>
-            <Animated.Text style={[styles.dot, { opacity: dotOpacity2 }]}>
-              .
-            </Animated.Text>
-            <Animated.Text style={[styles.dot, { opacity: dotOpacity3 }]}>
-              .
-            </Animated.Text>
-          </View>
+          {currentStep === 'error' ? (
+            <>
+              <Text style={styles.errorTitle}>Analysis Failed</Text>
+              <Text style={styles.errorMessage}>{errorMsg}</Text>
+            </>
+          ) : (
+            <>
+              <Text style={styles.statusTitle}>
+                {currentStep === 'done' ? 'Analysis Complete!' : 'Analyzing Your Plant'}
+              </Text>
+              <View style={styles.dotsRow}>
+                <Text style={styles.statusSubtext}>
+                  {currentStep === 'done' ? 'Loading results' : 'Please wait'}
+                </Text>
+                {currentStep !== 'done' && (
+                  <>
+                    <Animated.Text style={[styles.dot, { opacity: dotOpacity1 }]}>.</Animated.Text>
+                    <Animated.Text style={[styles.dot, { opacity: dotOpacity2 }]}>.</Animated.Text>
+                    <Animated.Text style={[styles.dot, { opacity: dotOpacity3 }]}>.</Animated.Text>
+                  </>
+                )}
+              </View>
+            </>
+          )}
         </View>
 
         {/* Progress steps */}
         <View style={styles.steps}>
           <View style={styles.stepRow}>
-            <Text style={styles.stepCheck}>✅</Text>
-            <Text style={styles.stepText}>Image captured</Text>
+            <Text style={styles.stepCheck}>{getStepIcon(currentStep, 'captured')}</Text>
+            <Text style={currentStep !== 'captured' ? styles.stepText : styles.stepTextActive}>
+              Image captured
+            </Text>
           </View>
           <View style={styles.stepRow}>
-            <Text style={styles.stepCheck}>✅</Text>
-            <Text style={styles.stepText}>Leaf detected</Text>
+            <Text style={styles.stepCheck}>{getStepIcon(currentStep, 'preprocessing')}</Text>
+            <Text style={currentStep === 'preprocessing' ? styles.stepTextActive : styles.stepText}>
+              Preprocessing image
+            </Text>
           </View>
           <View style={styles.stepRow}>
-            <Text style={styles.stepSpinner}>🔄</Text>
-            <Text style={styles.stepTextActive}>Identifying disease...</Text>
+            <Text style={styles.stepCheck}>{getStepIcon(currentStep, 'analyzing')}</Text>
+            <Text style={currentStep === 'analyzing' ? styles.stepTextActive : styles.stepText}>
+              Running AI analysis (on-device)
+            </Text>
+          </View>
+          <View style={styles.stepRow}>
+            <Text style={styles.stepCheck}>{getStepIcon(currentStep, 'done')}</Text>
+            <Text style={currentStep === 'done' ? styles.stepTextActive : styles.stepText}>
+              Disease identified
+            </Text>
           </View>
         </View>
+
+        {/* Offline badge */}
+        <View style={styles.offlineBadge}>
+          <Text style={styles.offlineText}>📡 Fully offline — no internet needed</Text>
+        </View>
+
+        {/* Error actions */}
+        {currentStep === 'error' && (
+          <View style={styles.errorActions}>
+            <TouchableOpacity style={styles.retryBtn} onPress={handleRetry}>
+              <Text style={styles.retryBtnText}>🔄 Retry Analysis</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.backBtn} onPress={handleGoBack}>
+              <Text style={styles.backBtnText}>← Back to Camera</Text>
+            </TouchableOpacity>
+          </View>
+        )}
       </View>
     </View>
   );
@@ -265,6 +334,16 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     marginLeft: 2,
   },
+  errorTitle: {
+    ...TYPOGRAPHY.heading,
+    color: COLORS.danger,
+    marginBottom: SPACING.sm,
+  },
+  errorMessage: {
+    ...TYPOGRAPHY.body,
+    color: COLORS.textSecondary,
+    textAlign: 'center',
+  },
   steps: {
     alignSelf: 'stretch',
     backgroundColor: COLORS.surface,
@@ -281,10 +360,6 @@ const styles = StyleSheet.create({
     fontSize: 20,
     marginRight: SPACING.sm,
   },
-  stepSpinner: {
-    fontSize: 20,
-    marginRight: SPACING.sm,
-  },
   stepText: {
     ...TYPOGRAPHY.body,
     color: COLORS.textSecondary,
@@ -292,5 +367,47 @@ const styles = StyleSheet.create({
   stepTextActive: {
     ...TYPOGRAPHY.bodyBold,
     color: COLORS.primary,
+  },
+  offlineBadge: {
+    marginTop: SPACING.md,
+    backgroundColor: COLORS.successLight,
+    paddingVertical: SPACING.xs,
+    paddingHorizontal: SPACING.md,
+    borderRadius: RADIUS.full,
+  },
+  offlineText: {
+    ...TYPOGRAPHY.caption,
+    color: COLORS.success,
+    fontWeight: '600',
+  },
+  errorActions: {
+    marginTop: SPACING.lg,
+    alignSelf: 'stretch',
+    gap: SPACING.sm,
+  },
+  retryBtn: {
+    backgroundColor: COLORS.primary,
+    paddingVertical: SPACING.md,
+    borderRadius: RADIUS.lg,
+    alignItems: 'center',
+    borderBottomWidth: 4,
+    borderBottomColor: COLORS.primaryDark,
+    ...SHADOWS.button3D,
+  },
+  retryBtnText: {
+    ...TYPOGRAPHY.bodyBold,
+    color: COLORS.textLight,
+  },
+  backBtn: {
+    backgroundColor: COLORS.surface,
+    paddingVertical: SPACING.md,
+    borderRadius: RADIUS.lg,
+    alignItems: 'center',
+    borderWidth: 1,
+    borderColor: COLORS.border,
+  },
+  backBtnText: {
+    ...TYPOGRAPHY.body,
+    color: COLORS.textSecondary,
   },
 });

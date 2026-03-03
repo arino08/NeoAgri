@@ -15,32 +15,67 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as Speech from 'expo-speech';
 import Card from '../components/Card';
 import BigButton from '../components/BigButton';
-import {
-  COLORS,
-  TYPOGRAPHY,
-  SPACING,
-  RADIUS,
-  SHADOWS,
-  MOCK_RESULT,
-} from '../constants/theme';
-
-type LangKey = keyof typeof MOCK_RESULT;
+import { COLORS, TYPOGRAPHY, SPACING, RADIUS, SHADOWS } from '../constants/theme';
+import { PredictionResult, LangKey } from '../types';
+import { getLocalizedResult } from '../services/inference';
+import { saveToHistory, generateScanId } from '../services/history';
 
 export default function ResultScreen() {
   const router = useRouter();
-  const { photoUri } = useLocalSearchParams<{ photoUri: string }>();
+  const { photoUri, prediction } = useLocalSearchParams<{
+    photoUri: string;
+    prediction: string;
+  }>();
+
   const [lang, setLang] = useState<LangKey>('en');
   const [isSpeaking, setIsSpeaking] = useState(false);
+  const [savedToHistory, setSavedToHistory] = useState(false);
+
+  // Parse prediction from route params
+  let predictionData: PredictionResult | null = null;
+  try {
+    if (prediction) {
+      predictionData = JSON.parse(prediction);
+    }
+  } catch {
+    console.error('[NeoAgri] Failed to parse prediction data');
+  }
 
   useEffect(() => {
     AsyncStorage.getItem('selectedLanguage').then((savedLang) => {
-      if (savedLang && (savedLang in MOCK_RESULT)) {
+      if (savedLang && ['en', 'hi', 'mr'].includes(savedLang)) {
         setLang(savedLang as LangKey);
       }
     });
   }, []);
 
-  const result = MOCK_RESULT[lang] || MOCK_RESULT.en;
+  // Get localized result
+  const result = predictionData
+    ? getLocalizedResult(predictionData, lang)
+    : {
+        disease: 'Unknown',
+        confidence: 0,
+        severity: 'Unknown',
+        remedy: 'N/A',
+        dosage: 'N/A',
+        instructions: 'Could not analyze image.',
+        prevention: 'N/A',
+      };
+
+  // Save to history on first render
+  useEffect(() => {
+    if (predictionData && !savedToHistory) {
+      const scan = {
+        id: generateScanId(),
+        photoUri: photoUri || '',
+        timestamp: Date.now(),
+        prediction: predictionData,
+        language: lang,
+      };
+      saveToHistory(scan);
+      setSavedToHistory(true);
+    }
+  }, [predictionData]);
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -75,6 +110,20 @@ export default function ResultScreen() {
     router.replace('/camera');
   };
 
+  const severityColor =
+    predictionData?.severity === 'High'
+      ? COLORS.danger
+      : predictionData?.severity === 'Moderate'
+      ? COLORS.warning
+      : COLORS.success;
+
+  const severityBg =
+    predictionData?.severity === 'High'
+      ? COLORS.dangerLight
+      : predictionData?.severity === 'Moderate'
+      ? '#FFF3E0'
+      : COLORS.successLight;
+
   return (
     <SafeAreaView style={styles.safeArea}>
       <ScrollView
@@ -86,12 +135,39 @@ export default function ResultScreen() {
         <View style={styles.header}>
           <Text style={styles.headerIcon}>📋</Text>
           <Text style={styles.headerTitle}>
-            {lang === 'hi' ? 'निदान रिपोर्ट' : lang === 'mr' ? 'निदान अहवाल' : 'Diagnosis Report'}
+            {lang === 'hi'
+              ? 'निदान रिपोर्ट'
+              : lang === 'mr'
+              ? 'निदान अहवाल'
+              : 'Diagnosis Report'}
           </Text>
         </View>
 
+        {/* Healthy badge or disease alert */}
+        {predictionData?.isHealthy && (
+          <View style={styles.healthyBanner}>
+            <Text style={styles.healthyIcon}>🎉</Text>
+            <Text style={styles.healthyText}>
+              {lang === 'hi'
+                ? 'आपका पौधा स्वस्थ है!'
+                : lang === 'mr'
+                ? 'तुमचे झाड निरोगी आहे!'
+                : 'Your plant is healthy!'}
+            </Text>
+          </View>
+        )}
+
         {/* Diagnosis Card */}
-        <Card title={lang === 'hi' ? '🔍 रोग की पहचान' : lang === 'mr' ? '🔍 रोगाची ओळख' : '🔍 Disease Identified'} variant="warning">
+        <Card
+          title={
+            lang === 'hi'
+              ? '🔍 रोग की पहचान'
+              : lang === 'mr'
+              ? '🔍 रोगाची ओळख'
+              : '🔍 Disease Identified'
+          }
+          variant={predictionData?.isHealthy ? 'success' : 'warning'}
+        >
           <View style={styles.diagnosisContent}>
             {photoUri ? (
               <Image source={{ uri: photoUri }} style={styles.leafImage} />
@@ -105,60 +181,117 @@ export default function ResultScreen() {
               <View style={styles.confidenceBadge}>
                 <Text style={styles.confidenceText}>
                   {result.confidence}%{' '}
-                  {lang === 'hi' ? 'सटीकता' : lang === 'mr' ? 'अचूकता' : 'Confidence'}
+                  {lang === 'hi'
+                    ? 'सटीकता'
+                    : lang === 'mr'
+                    ? 'अचूकता'
+                    : 'Confidence'}
                 </Text>
               </View>
-              <View style={styles.severityBadge}>
-                <Text style={styles.severityText}>
-                  ⚠️ {result.severity}
+              {!predictionData?.isHealthy && (
+                <View style={[styles.severityBadge, { backgroundColor: severityBg }]}>
+                  <Text style={[styles.severityText, { color: severityColor }]}>
+                    ⚠️ {result.severity}
+                  </Text>
+                </View>
+              )}
+              {predictionData?.cropName && (
+                <Text style={styles.cropName}>
+                  🌱 {predictionData.cropName}
                 </Text>
-              </View>
+              )}
             </View>
           </View>
         </Card>
 
-        {/* Remedy Card */}
-        <Card
-          title={
-            lang === 'hi'
-              ? '💊 उपचार'
-              : lang === 'mr'
-              ? '💊 उपचार'
-              : '💊 Recommended Treatment'
-          }
-          variant="success"
-        >
-          <View style={styles.remedySection}>
-            <View style={styles.remedyHeader}>
-              <Text style={styles.remedyIcon}>🧪</Text>
-              <Text style={styles.remedyName}>{result.remedy}</Text>
-            </View>
+        {/* Remedy Card (only for diseased plants) */}
+        {!predictionData?.isHealthy && (
+          <Card
+            title={
+              lang === 'hi'
+                ? '💊 उपचार'
+                : lang === 'mr'
+                ? '💊 उपचार'
+                : '💊 Recommended Treatment'
+            }
+            variant="success"
+          >
+            <View style={styles.remedySection}>
+              <View style={styles.remedyHeader}>
+                <Text style={styles.remedyIcon}>🧪</Text>
+                <Text style={styles.remedyName}>{result.remedy}</Text>
+              </View>
 
-            <View style={styles.dosageBox}>
-              <Text style={styles.dosageLabel}>
-                {lang === 'hi' ? 'खुराक:' : lang === 'mr' ? 'मात्रा:' : 'Dosage:'}
-              </Text>
-              <Text style={styles.dosageValue}>{result.dosage}</Text>
-            </View>
+              <View style={styles.dosageBox}>
+                <Text style={styles.dosageLabel}>
+                  {lang === 'hi'
+                    ? 'खुराक:'
+                    : lang === 'mr'
+                    ? 'मात्रा:'
+                    : 'Dosage:'}
+                </Text>
+                <Text style={styles.dosageValue}>{result.dosage}</Text>
+              </View>
 
+              <View style={styles.instructionBox}>
+                <Text style={styles.instructionLabel}>
+                  {lang === 'hi'
+                    ? 'निर्देश:'
+                    : lang === 'mr'
+                    ? 'सूचना:'
+                    : 'Instructions:'}
+                </Text>
+                <Text style={styles.instructionValue}>{result.instructions}</Text>
+              </View>
+
+              <View style={styles.preventionBox}>
+                <Text style={styles.preventionLabel}>
+                  {lang === 'hi'
+                    ? '🛡️ रोकथाम:'
+                    : lang === 'mr'
+                    ? '🛡️ प्रतिबंध:'
+                    : '🛡️ Prevention:'}
+                </Text>
+                <Text style={styles.preventionValue}>{result.prevention}</Text>
+              </View>
+            </View>
+          </Card>
+        )}
+
+        {/* Healthy plant tips */}
+        {predictionData?.isHealthy && (
+          <Card
+            title={
+              lang === 'hi'
+                ? '💡 स्वस्थ रखने के टिप्स'
+                : lang === 'mr'
+                ? '💡 निरोगी ठेवण्याचे टिप्स'
+                : '💡 Keeping It Healthy'
+            }
+            variant="success"
+          >
             <View style={styles.instructionBox}>
-              <Text style={styles.instructionLabel}>
-                {lang === 'hi' ? 'निर्देश:' : lang === 'mr' ? 'सूचना:' : 'Instructions:'}
-              </Text>
               <Text style={styles.instructionValue}>{result.instructions}</Text>
             </View>
-
-            <View style={styles.preventionBox}>
+            <View style={[styles.preventionBox, { marginTop: SPACING.sm }]}>
               <Text style={styles.preventionLabel}>
-                {lang === 'hi' ? '🛡️ रोकथाम:' : lang === 'mr' ? '🛡️ प्रतिबंध:' : '🛡️ Prevention:'}
+                {lang === 'hi'
+                  ? '🌱 सर्वोत्तम अभ्यास:'
+                  : lang === 'mr'
+                  ? '🌱 सर्वोत्तम पद्धती:'
+                  : '🌱 Best Practices:'}
               </Text>
               <Text style={styles.preventionValue}>{result.prevention}</Text>
             </View>
-          </View>
-        </Card>
+          </Card>
+        )}
 
         {/* Audio Card */}
-        <Card title={lang === 'hi' ? '🔊 ऑडियो' : lang === 'mr' ? '🔊 ऑडिओ' : '🔊 Listen'}>
+        <Card
+          title={
+            lang === 'hi' ? '🔊 ऑडियो' : lang === 'mr' ? '🔊 ऑडिओ' : '🔊 Listen'
+          }
+        >
           <TouchableOpacity
             style={[
               styles.audioButton,
@@ -201,6 +334,17 @@ export default function ResultScreen() {
             size="large"
           />
         </View>
+
+        {/* Offline badge */}
+        <View style={styles.offlineBadge}>
+          <Text style={styles.offlineText}>
+            📡 {lang === 'hi'
+              ? 'ऑफलाइन विश्लेषण — इंटरनेट नहीं चाहिए'
+              : lang === 'mr'
+              ? 'ऑफलाइन विश्लेषण — इंटरनेट नको'
+              : 'Analyzed offline — no internet needed'}
+          </Text>
+        </View>
       </ScrollView>
     </SafeAreaView>
   );
@@ -219,7 +363,6 @@ const styles = StyleSheet.create({
     padding: SPACING.lg,
     paddingBottom: SPACING.xxl,
   },
-  // Header
   header: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -233,6 +376,27 @@ const styles = StyleSheet.create({
   headerTitle: {
     ...TYPOGRAPHY.heading,
     color: COLORS.text,
+  },
+  // Healthy banner
+  healthyBanner: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: COLORS.successLight,
+    paddingVertical: SPACING.md,
+    paddingHorizontal: SPACING.lg,
+    borderRadius: RADIUS.lg,
+    marginBottom: SPACING.md,
+    borderWidth: 2,
+    borderColor: COLORS.success,
+  },
+  healthyIcon: {
+    fontSize: 28,
+    marginRight: SPACING.sm,
+  },
+  healthyText: {
+    ...TYPOGRAPHY.subheading,
+    color: COLORS.success,
   },
   // Diagnosis card
   diagnosisContent: {
@@ -260,11 +424,11 @@ const styles = StyleSheet.create({
   },
   diseaseName: {
     ...TYPOGRAPHY.heading,
-    color: COLORS.danger,
+    color: COLORS.text,
     marginBottom: SPACING.sm,
   },
   confidenceBadge: {
-    backgroundColor: '#E8F5E9',
+    backgroundColor: COLORS.successLight,
     paddingVertical: SPACING.xs,
     paddingHorizontal: SPACING.sm,
     borderRadius: RADIUS.sm,
@@ -282,11 +446,17 @@ const styles = StyleSheet.create({
     paddingHorizontal: SPACING.sm,
     borderRadius: RADIUS.sm,
     alignSelf: 'flex-start',
+    marginBottom: SPACING.xs,
   },
   severityText: {
     ...TYPOGRAPHY.label,
     color: COLORS.warning,
     fontWeight: '600',
+  },
+  cropName: {
+    ...TYPOGRAPHY.caption,
+    color: COLORS.textSecondary,
+    marginTop: SPACING.xs,
   },
   // Remedy
   remedySection: {
@@ -295,7 +465,7 @@ const styles = StyleSheet.create({
   remedyHeader: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#E8F5E9',
+    backgroundColor: COLORS.successLight,
     padding: SPACING.md,
     borderRadius: RADIUS.md,
   },
@@ -379,5 +549,19 @@ const styles = StyleSheet.create({
   // Bottom
   bottomAction: {
     marginTop: SPACING.lg,
+  },
+  offlineBadge: {
+    alignItems: 'center',
+    marginTop: SPACING.md,
+    backgroundColor: COLORS.successLight,
+    paddingVertical: SPACING.xs,
+    paddingHorizontal: SPACING.md,
+    borderRadius: RADIUS.full,
+    alignSelf: 'center',
+  },
+  offlineText: {
+    ...TYPOGRAPHY.caption,
+    color: COLORS.success,
+    fontWeight: '600',
   },
 });
