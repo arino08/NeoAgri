@@ -1,0 +1,26 @@
+[
+  {
+    "crop": "Pepper (Bell)",
+    "disease": "Healthy",
+    "cause": "No disease detected. The pepper plant is growing under normal and healthy conditions",
+    "symptoms": "Leaves are green, fresh, and without spots, damage, or discoloration",
+    "cure": "No treatment required. Continue regular watering and proper plant care",
+    "prevention": "Maintain proper irrigation, provide sufficient sunlight, and use healthy seeds to keep the plant disease-free",
+
+    "voice": "Your pepper plant is healthy. No disease is detected and the plant is growing normally. The leaves are green and fresh without any spots or damage. No treatment is required. Maintain proper irrigation and sunlight to keep the plant healthy.",
+
+    "voice_hi": "आपका शिमला मिर्च का पौधा स्वस्थ है। इसमें कोई रोग नहीं पाया गया है और पौधा सामान्य रूप से बढ़ रहा है। पत्तियां हरी और ताज़ा हैं तथा उन पर कोई धब्बा या नुकसान नहीं है। किसी उपचार की आवश्यकता नहीं है। पौधे को स्वस्थ रखने के लिए उचित सिंचाई करें और पर्याप्त धूप प्रदान करें।"
+  },
+  {
+    "crop": "Pepper (Bell)",
+    "disease": "Bacterial Spot",
+    "cause": "Bacterial infection caused by Xanthomonas species spread through contaminated seeds, tools, and water",
+    "symptoms": "Small dark spots on leaves and fruits with yellow halos and leaf drop",
+    "cure": "Remove infected plant parts and spray recommended bactericide",
+    "prevention": "Use disease-free seeds, avoid working in wet fields, and disinfect farming tools",
+
+    "voice": "Your pepper plant has Bacterial Spot disease. It is caused by a bacterial infection spread through contaminated tools and water. Symptoms include small dark spots on leaves and fruits. Remove infected parts and spray recommended bactericide. To prevent this disease, use disease-free seeds and disinfect tools regularly.",
+
+    "voice_hi": "आपके शिमला मिर्च के पौधे में बैक्टीरियल स्पॉट रोग है। यह संक्रमित बीजों, औजारों और पानी से फैलने वाला बैक्टीरियल संक्रमण है। इसके लक्षणों में पत्तियों और फलों पर छोटे काले धब्बे दिखाई देते हैं। संक्रमित भागों को हटाएं और अनुशंसित बैक्टीरिसाइड का छिड़काव करें। इस रोग से बचाव के लिए रोग-मुक्त बीजों का उपयोग करें और खेती के औजारों को साफ रखें।"
+  }
+]

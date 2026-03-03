@@ -1,0 +1,14 @@
+[
+  {
+    "crop": "Soybean",
+    "disease": "Healthy",
+    "cause": "No disease detected. The soybean plant is growing under normal and healthy conditions",
+    "symptoms": "Leaves are green, fresh, and without spots, discoloration, or damage",
+    "cure": "No treatment required. Continue regular watering and proper plant care",
+    "prevention": "Maintain proper irrigation, provide sufficient sunlight, and use healthy seeds to keep the plant disease-free",
+
+    "voice": "Your soybean plant is healthy. No disease is detected and the plant is growing normally. The leaves are green and fresh without any spots or damage. No treatment is required. Maintain proper irrigation and use healthy seeds to keep the plant healthy.",
+
+    "voice_hi": "आपका सोयाबीन का पौधा स्वस्थ है। इसमें कोई रोग नहीं पाया गया है और पौधा सामान्य रूप से बढ़ रहा है। पत्तियां हरी और ताज़ा हैं तथा उन पर कोई धब्बा या नुकसान नहीं है। किसी उपचार की आवश्यकता नहीं है। पौधे को स्वस्थ रखने के लिए उचित सिंचाई करें और अच्छे गुणवत्ता वाले बीजों का उपयोग करें।"
+  }
+]

@@ -1,0 +1,14 @@
+[
+  {
+    "crop": "Orange",
+    "disease": "Huanglongbing (Citrus Greening)",
+    "cause": "Bacterial infection spread by citrus psyllid insects and infected planting material",
+    "symptoms": "Yellowing of leaves with blotchy patterns, misshapen and bitter fruits, and stunted plant growth",
+    "cure": "Remove and destroy infected trees and control psyllids using recommended insecticides",
+    "prevention": "Use disease-free planting material, control insect pests, and regularly monitor orchards for early symptoms",
+
+    "voice": "Your orange plant has Huanglongbing also known as Citrus Greening disease. It is caused by a bacterial infection spread by citrus psyllid insects. Symptoms include yellowing of leaves with blotchy patterns, deformed and bitter fruits, and slow plant growth. Remove and destroy infected trees and control psyllids using recommended insecticides. To prevent this disease, use disease-free planting material, control insect pests, and regularly monitor plants for early signs of infection.",
+
+    "voice_hi": "आपके संतरे के पौधे में हुआंगलोंगबिंग जिसे साइट्रस ग्रीनिंग रोग भी कहा जाता है, पाया गया है। यह रोग साइट्रस साइलिड नामक कीट द्वारा फैलने वाले बैक्टीरियल संक्रमण के कारण होता है। इसके लक्षणों में पत्तियों का धब्बेदार पीला होना, फलों का टेढ़ा-मेढ़ा और कड़वा हो जाना तथा पौधे की वृद्धि का रुक जाना शामिल है। संक्रमित पेड़ों को हटाकर नष्ट करें और अनुशंसित कीटनाशकों से साइलिड कीट को नियंत्रित करें। इस रोग से बचाव के लिए रोग-मुक्त पौध सामग्री का उपयोग करें, कीटों को नियंत्रित रखें और बाग की नियमित निगरानी करें।"
+  }
+]

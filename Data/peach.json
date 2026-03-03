@@ -1,0 +1,26 @@
+[
+  {
+    "crop": "Peach",
+    "disease": "Healthy",
+    "cause": "No disease detected. The peach plant is growing under normal and healthy conditions",
+    "symptoms": "Leaves are green, fresh, and without spots, damage, or discoloration",
+    "cure": "No treatment required. Continue regular watering and proper plant care",
+    "prevention": "Maintain proper irrigation, provide sufficient sunlight, and use healthy planting material to keep the plant disease-free",
+
+    "voice": "Your peach plant is healthy. No disease is detected and the plant is growing normally. The leaves are green and fresh without any spots or damage. No treatment is required. Maintain proper irrigation and sunlight to keep the plant healthy.",
+
+    "voice_hi": "आपका आड़ू का पौधा स्वस्थ है। इसमें कोई रोग नहीं पाया गया है और पौधा सामान्य रूप से बढ़ रहा है। पत्तियां हरी और ताज़ा हैं तथा उन पर कोई धब्बा या नुकसान नहीं है। किसी उपचार की आवश्यकता नहीं है। पौधे को स्वस्थ रखने के लिए उचित सिंचाई करें और पर्याप्त धूप प्रदान करें।"
+  },
+  {
+    "crop": "Peach",
+    "disease": "Bacterial Spot",
+    "cause": "Bacterial infection caused by Xanthomonas species spread through rain, wind, and contaminated tools",
+    "symptoms": "Small dark spots on leaves and fruits, leaf yellowing, and fruit cracking",
+    "cure": "Remove infected plant parts and apply recommended bactericide",
+    "prevention": "Avoid overhead watering, disinfect tools, and use disease-free planting material",
+
+    "voice": "Your peach plant has Bacterial Spot disease. It is caused by a bacterial infection spread through rain and tools. Symptoms include dark spots on leaves and fruits and leaf yellowing. Remove infected parts and spray recommended bactericide. To prevent this disease, avoid overhead watering and disinfect tools.",
+
+    "voice_hi": "आपके आड़ू के पौधे में बैक्टीरियल स्पॉट रोग है। यह बारिश, हवा और संक्रमित औजारों से फैलने वाला बैक्टीरियल संक्रमण है। इसके लक्षणों में पत्तियों और फलों पर छोटे काले धब्बे, पत्तियों का पीला होना और फलों का फटना शामिल है। संक्रमित भागों को हटाएं और अनुशंसित बैक्टीरिसाइड का छिड़काव करें। इस रोग से बचाव के लिए ऊपर से पानी देने से बचें और औजारों को कीटाणुरहित करें।"
+  }
+]

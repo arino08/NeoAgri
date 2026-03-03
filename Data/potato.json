@@ -1,0 +1,38 @@
+[
+  {
+    "crop": "Potato",
+    "disease": "Healthy",
+    "cause": "No disease detected. The potato plant is growing under normal and healthy conditions",
+    "symptoms": "Leaves are green, fresh, and without spots or damage",
+    "cure": "No treatment required. Continue regular watering and proper plant care",
+    "prevention": "Maintain proper irrigation, provide sufficient sunlight, and use healthy seed potatoes to keep the plant disease-free",
+
+    "voice": "Your potato plant is healthy. No disease is detected and the plant is growing normally. The leaves are green and fresh without any spots or damage. No treatment is required. Maintain proper irrigation and use healthy seed potatoes to keep the plant healthy.",
+
+    "voice_hi": "आपका आलू का पौधा स्वस्थ है। इसमें कोई रोग नहीं पाया गया है और पौधा सामान्य रूप से बढ़ रहा है। पत्तियां हरी और ताज़ा हैं तथा उन पर कोई धब्बा या नुकसान नहीं है। किसी उपचार की आवश्यकता नहीं है। पौधे को स्वस्थ रखने के लिए उचित सिंचाई करें और अच्छे बीज आलू का उपयोग करें।"
+  },
+  {
+    "crop": "Potato",
+    "disease": "Late Blight",
+    "cause": "Fungal-like infection caused by Phytophthora due to cool and wet conditions",
+    "symptoms": "Dark brown or black spots on leaves and stems and rapid plant decay",
+    "cure": "Remove infected plants and spray recommended fungicide immediately",
+    "prevention": "Avoid overhead watering, ensure proper spacing, and use disease-free seed potatoes",
+
+    "voice": "Your potato plant has Late Blight disease. It is caused by a fungal-like infection due to cool and wet conditions. Symptoms include dark spots on leaves and rapid plant decay. Remove infected plants and spray recommended fungicide immediately. To prevent this disease, avoid overhead watering and use disease-free seed potatoes.",
+
+    "voice_hi": "आपके आलू के पौधे में लेट ब्लाइट रोग है। यह ठंडे और गीले मौसम में होने वाले फंगल संक्रमण के कारण होता है। इसके लक्षणों में पत्तियों और तनों पर काले या भूरे धब्बे और पौधे का जल्दी सड़ना शामिल है। संक्रमित पौधों को हटाएं और तुरंत अनुशंसित फंगीसाइड का छिड़काव करें। इस रोग से बचाव के लिए ऊपर से पानी देने से बचें और रोग-मुक्त बीज आलू का उपयोग करें।"
+  },
+  {
+    "crop": "Potato",
+    "disease": "Early Blight",
+    "cause": "Fungal infection caused by Alternaria due to warm and humid conditions",
+    "symptoms": "Brown spots with concentric rings on older leaves and leaf yellowing",
+    "cure": "Remove infected leaves and apply recommended fungicide regularly",
+    "prevention": "Avoid overhead watering, practice crop rotation, and remove plant debris from soil",
+
+    "voice": "Your potato plant has Early Blight disease. It is caused by a fungal infection due to warm and humid conditions. Symptoms include brown spots with rings on leaves and leaf yellowing. Remove infected leaves and spray recommended fungicide regularly. To prevent this disease, practice crop rotation and keep the field clean.",
+
+    "voice_hi": "आपके आलू के पौधे में अर्ली ब्लाइट रोग है। यह गर्म और नम मौसम में होने वाले फंगल संक्रमण के कारण होता है। इसके लक्षणों में पत्तियों पर भूरे रंग के छल्लेदार धब्बे और पत्तियों का पीला होना शामिल है। संक्रमित पत्तियों को हटाएं और नियमित रूप से अनुशंसित फंगीसाइड का छिड़काव करें। इस रोग से बचाव के लिए फसल चक्र अपनाएं और खेत को साफ रखें।"
+  }
+]

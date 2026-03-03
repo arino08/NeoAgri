@@ -1,0 +1,26 @@
+[
+  {
+    "crop": "Strawberry",
+    "disease": "Healthy",
+    "cause": "No disease detected. The strawberry plant is growing under normal and healthy conditions",
+    "symptoms": "Leaves are green, fresh, and without spots, discoloration, or damage",
+    "cure": "No treatment required. Continue regular watering and proper plant care",
+    "prevention": "Maintain proper irrigation, provide sufficient sunlight, and use healthy planting material to keep the plant disease-free",
+
+    "voice": "Your strawberry plant is healthy. No disease is detected and the plant is growing normally. The leaves are green and fresh without any spots or damage. No treatment is required. Maintain proper irrigation and sunlight to keep the plant healthy.",
+
+    "voice_hi": "आपका स्ट्रॉबेरी का पौधा स्वस्थ है। इसमें कोई रोग नहीं पाया गया है और पौधा सामान्य रूप से बढ़ रहा है। पत्तियां हरी और ताज़ा हैं तथा उन पर कोई धब्बा या नुकसान नहीं है। किसी उपचार की आवश्यकता नहीं है। पौधे को स्वस्थ रखने के लिए उचित सिंचाई और पर्याप्त धूप प्रदान करें।"
+  },
+  {
+    "crop": "Strawberry",
+    "disease": "Leaf Scorch",
+    "cause": "Fungal infection caused by Diplocarpon species due to warm and humid conditions",
+    "symptoms": "Purple or reddish spots on leaves that later turn brown and dry, causing leaf scorch",
+    "cure": "Remove infected leaves and spray recommended fungicide regularly",
+    "prevention": "Avoid overhead watering, improve air circulation, and remove plant debris from soil",
+
+    "voice": "Your strawberry plant has Leaf Scorch disease. It is caused by a fungal infection due to warm and humid conditions. Symptoms include reddish or purple spots on leaves that turn brown and dry. Remove infected leaves and spray recommended fungicide regularly. To prevent this disease, avoid overhead watering and improve air circulation.",
+
+    "voice_hi": "आपके स्ट्रॉबेरी के पौधे में लीफ स्कॉर्च रोग है। यह गर्म और नम मौसम में होने वाले फंगल संक्रमण के कारण होता है। इसके लक्षणों में पत्तियों पर लाल या बैंगनी धब्बे दिखाई देते हैं जो बाद में भूरे होकर सूख जाते हैं। संक्रमित पत्तियों को हटाएं और नियमित रूप से अनुशंसित फंगीसाइड का छिड़काव करें। इस रोग से बचाव के लिए ऊपर से पानी देने से बचें और हवा का अच्छा संचार रखें।"
+  }
+]
