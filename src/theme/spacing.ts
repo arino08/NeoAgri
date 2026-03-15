@@ -5,21 +5,21 @@ export const spacing = {
   lg: 24,
   xl: 32,
   xxl: 48,
-};
+} as const;
 
 export const borderRadius = {
   sm: 12,
   md: 16,
-  lg: 28, // Much rounder corners
+  lg: 28,
   xl: 32,
   round: 9999,
-};
+} as const;
 
 export const shadows = {
   soft: {
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.03, // Flatter appearance
+    shadowOpacity: 0.03,
     shadowRadius: 4,
     elevation: 1,
   },
@@ -29,5 +29,5 @@ export const shadows = {
     shadowOpacity: 0.05,
     shadowRadius: 8,
     elevation: 2,
-  }
-};
+  },
+} as const;

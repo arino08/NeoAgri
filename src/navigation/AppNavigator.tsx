@@ -3,7 +3,6 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 
-// Import Screens
 import SplashScreen from '../screens/SplashScreen';
 import LanguageSelectionScreen from '../screens/LanguageSelectionScreen';
 import CameraHomeScreen from '../screens/CameraHomeScreen';
@@ -12,17 +11,23 @@ import DroneServiceScreen from '../screens/DroneServiceScreen';
 import DiseaseResultScreen from '../screens/DiseaseResultScreen';
 import { colors } from '../theme/colors';
 
-const Stack = createNativeStackNavigator();
+export type RootStackParamList = {
+  Splash: undefined;
+  Language: undefined;
+  MainHub: undefined;
+  DiseaseResult: { photoUri?: string };
+};
+
+const Stack = createNativeStackNavigator<RootStackParamList>();
 const Tab = createMaterialTopTabNavigator();
 
-// Swipeable Main Hub Group
 function MainSwipeHub() {
   return (
     <Tab.Navigator
       initialRouteName="CameraHome"
       backBehavior="initialRoute"
       screenOptions={{
-        tabBarStyle: { display: 'none' }, // Hide tabs, rely entirely on swiping
+        tabBarStyle: { display: 'none' },
         swipeEnabled: true,
       }}
     >
@@ -38,7 +43,10 @@ export default function AppNavigator() {
     <NavigationContainer>
       <Stack.Navigator
         initialRouteName="Splash"
-        screenOptions={{ headerShown: false, contentStyle: { backgroundColor: colors.background } }}
+        screenOptions={{
+          headerShown: false,
+          contentStyle: { backgroundColor: colors.background },
+        }}
       >
         <Stack.Screen name="Splash" component={SplashScreen} />
         <Stack.Screen name="Language" component={LanguageSelectionScreen} />

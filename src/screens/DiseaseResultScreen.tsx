@@ -1,20 +1,32 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, SafeAreaView, ActivityIndicator, Image } from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  ScrollView,
+  TouchableOpacity,
+  SafeAreaView,
+  ActivityIndicator,
+} from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { colors } from '../theme/colors';
 import { typography } from '../theme/typography';
 import { spacing, borderRadius, shadows } from '../theme/spacing';
 import { LanguageContext } from '../context/LanguageContext';
+import { RootStackParamList } from '../navigation/AppNavigator';
 
-export default function DiseaseResultScreen({ navigation }) {
-  const { t } = useContext(LanguageContext);
-  const [loading, setLoading] = useState(true);
+type Props = {
+  navigation: NativeStackNavigationProp<RootStackParamList, 'DiseaseResult'>;
+};
+
+export default function DiseaseResultScreen({ navigation }: Props) {
+  const ctx = useContext(LanguageContext);
+  const t = ctx?.t ?? ((k: string) => k);
+  const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
-    // Simulate API processing delay
-    const timer = setTimeout(() => {
-      setLoading(false);
-    }, 2500);
+    const timer = setTimeout(() => setLoading(false), 2500);
     return () => clearTimeout(timer);
   }, []);
 
@@ -40,12 +52,10 @@ export default function DiseaseResultScreen({ navigation }) {
       </View>
 
       <ScrollView contentContainerStyle={styles.scrollContent}>
-        {/* Mock Image Header */}
         <View style={styles.imagePlaceholder}>
           <Ionicons name="leaf" color={colors.white} size={64} style={{ opacity: 0.5 }} />
         </View>
 
-        {/* Primary Result Card */}
         <View style={[styles.card, styles.primaryCard]}>
           <View style={styles.resultHeader}>
             <View>
@@ -58,39 +68,36 @@ export default function DiseaseResultScreen({ navigation }) {
           </View>
         </View>
 
-        {/* Explanation Card */}
         <View style={styles.card}>
           <View style={styles.cardTitleRow}>
             <Ionicons name="shield" color={colors.warning} size={20} />
             <Text style={styles.cardTitle}>{t('whyHappened')}</Text>
           </View>
           <Text style={styles.cardText}>
-            Early blight is caused by the fungus Alternaria solani. It spreads quickly in warm, humid weather and during heavy rainfall or overhead irrigation.
+            Early blight is caused by the fungus Alternaria solani. It spreads quickly in warm, humid weather.
           </Text>
         </View>
 
-        {/* Organic Treatment */}
         <View style={styles.card}>
           <View style={styles.cardTitleRow}>
             <Ionicons name="water" color={colors.softGreen} size={20} />
             <Text style={styles.cardTitle}>{t('organicTreatment')}</Text>
           </View>
           <Text style={styles.cardText}>
-            • Remove the affected leaves immediately.
-            {'\n'}• Spray copper-based organic fungicides early in the morning.
-            {'\n'}• Improve air circulation around the plants.
+            • Remove the affected leaves immediately.{'\n'}
+            • Spray copper-based organic fungicides early in the morning.{'\n'}
+            • Improve air circulation around the plants.
           </Text>
         </View>
 
-        {/* Chemical Treatment */}
         <View style={styles.card}>
           <View style={styles.cardTitleRow}>
             <Ionicons name="flask" color={colors.error} size={20} />
             <Text style={styles.cardTitle}>{t('chemicalTreatment')}</Text>
           </View>
           <Text style={styles.cardText}>
-            • Apply Chlorothalonil or Mancozeb based fungicides.
-            {'\n'}• Repeat application every 7 to 10 days if humid weather persists.
+            • Apply Chlorothalonil or Mancozeb based fungicides.{'\n'}
+            • Repeat application every 7 to 10 days if humid weather persists.
           </Text>
         </View>
       </ScrollView>
@@ -107,15 +114,11 @@ const styles = StyleSheet.create({
   },
   loadingText: {
     marginTop: spacing.md,
-    fontFamily: typography.primary,
     fontSize: typography.sizes.lg,
     color: colors.primaryGreen,
     fontWeight: typography.weights.medium,
   },
-  container: {
-    flex: 1,
-    backgroundColor: colors.background,
-  },
+  container: { flex: 1, backgroundColor: colors.background },
   header: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -126,11 +129,8 @@ const styles = StyleSheet.create({
     ...shadows.soft,
     zIndex: 10,
   },
-  backButton: {
-    padding: spacing.xs,
-  },
+  backButton: { padding: spacing.xs },
   headerTitle: {
-    fontFamily: typography.primary,
     fontSize: typography.sizes.lg,
     fontWeight: typography.weights.bold,
     color: colors.textPrimary,
@@ -140,10 +140,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#E8F5E9',
     borderRadius: borderRadius.round,
   },
-  scrollContent: {
-    padding: spacing.lg,
-    paddingBottom: spacing.xxl,
-  },
+  scrollContent: { padding: spacing.lg, paddingBottom: spacing.xxl },
   imagePlaceholder: {
     width: '100%',
     height: 200,
@@ -161,23 +158,18 @@ const styles = StyleSheet.create({
     marginBottom: spacing.md,
     ...shadows.soft,
   },
-  primaryCard: {
-    borderLeftWidth: 4,
-    borderLeftColor: colors.error,
-  },
+  primaryCard: { borderLeftWidth: 4, borderLeftColor: colors.error },
   resultHeader: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'flex-start',
   },
   cropName: {
-    fontFamily: typography.secondary,
     fontSize: typography.sizes.md,
     color: colors.textSecondary,
     marginBottom: spacing.xs,
   },
   diseaseName: {
-    fontFamily: typography.primary,
     fontSize: typography.sizes.xl,
     fontWeight: typography.weights.bold,
     color: colors.error,
@@ -200,15 +192,13 @@ const styles = StyleSheet.create({
     gap: spacing.sm,
   },
   cardTitle: {
-    fontFamily: typography.primary,
     fontSize: typography.sizes.lg,
     fontWeight: typography.weights.semiBold,
     color: colors.textPrimary,
   },
   cardText: {
-    fontFamily: typography.secondary,
     fontSize: typography.sizes.md,
     color: colors.textSecondary,
     lineHeight: 24,
-  }
+  },
 });
