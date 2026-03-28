@@ -20,7 +20,7 @@ const JWT_SECRET = process.env.JWT_SECRET || 'super-secret-neoagri';
 
 // Twilio Setup
 // In production, we'll actually send the SMS. For dev without strict .env tokens, we can mock if disabled.
-const twilioClient = (process.env.TWILIO_ACCOUNT_SID && process.env.TWILIO_ACCOUNT_SID.startsWith('AC') && process.env.TWILIO_AUTH_TOKEN) 
+const twilioClient = (process.env.TWILIO_ACCOUNT_SID && process.env.TWILIO_ACCOUNT_SID.startsWith('AC') && process.env.TWILIO_AUTH_TOKEN)
     ? twilio(process.env.TWILIO_ACCOUNT_SID, process.env.TWILIO_AUTH_TOKEN)
     : null;
 
@@ -36,7 +36,7 @@ app.post('/auth/otp/send', async (req, res) => {
   const otp = Math.floor(1000 + Math.random() * 9000).toString();
   otpStore[phone] = otp;
   const messageBody = `Your NeoAgri OTP is ${otp}. Please do not share this with anyone.`;
-  
+
   try {
     if (twilioClient) {
       await twilioClient.messages.create({
@@ -57,7 +57,7 @@ app.post('/auth/otp/send', async (req, res) => {
 
 app.post('/auth/otp/verify', async (req, res) => {
   const { phone, otp } = req.body;
-  
+
   // Validate OTP
   if (!otpStore[phone] || otpStore[phone] !== otp) {
     return res.status(400).json({ error: 'Invalid or expired OTP' });
@@ -105,7 +105,7 @@ app.post('/session/create', authenticateToken, async (req, res) => {
 
     console.log(`[DRONE] New session created by ${phone} for Farm: ${farmId}`);
     console.log(`[DRONE] Received ${markers?.length || 0} captures from website_station_backend`);
-    
+
     // Insert Session
     await pool.query(
       `INSERT INTO drone_sessions (session_id, farmer_phone, farm_id, drone_id) VALUES ($1, $2, $3, $4)`,
@@ -117,20 +117,20 @@ app.post('/session/create', authenticateToken, async (req, res) => {
       for (const m of markers) {
         if (m.type === 'leaf_capture' && m.payload) {
           const { capture_id, latitude, longitude, timestamp_utc, model_result, leaf_image_b64 } = m.payload;
-          
+
           await pool.query(
-            `INSERT INTO drone_markers 
-             (capture_id, session_id, latitude, longitude, timestamp_utc, disease, confidence, leaf_image_b64, status) 
+            `INSERT INTO drone_markers
+             (capture_id, session_id, latitude, longitude, timestamp_utc, disease, confidence, leaf_image_b64, status)
              VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)`,
             [
-              capture_id, 
-              sessionId, 
-              latitude, 
-              longitude, 
-              new Date(timestamp_utc), 
-              model_result?.disease || '', 
-              model_result?.confidence || 0, 
-              leaf_image_b64 || null, 
+              capture_id,
+              sessionId,
+              latitude,
+              longitude,
+              new Date(timestamp_utc),
+              model_result?.disease || '',
+              model_result?.confidence || 0,
+              leaf_image_b64 || null,
               'unverified'
             ]
           );
@@ -148,10 +148,10 @@ app.post('/session/create', authenticateToken, async (req, res) => {
 // --- FETCH MARKERS (For offline pull) ---
 app.get('/session/:id/markers', authenticateToken, async (req, res) => {
   const sessionId = req.params.id;
-  
+
   try {
     const result = await pool.query(
-      `SELECT * FROM drone_markers WHERE session_id = $1`, 
+      `SELECT * FROM drone_markers WHERE session_id = $1`,
       [sessionId]
     );
 
@@ -201,8 +201,8 @@ app.post('/scan/sync', authenticateToken, async (req, res) => {
     if (scans && scans.length > 0) {
       for (const s of scans) {
         await pool.query(
-          `INSERT INTO manual_scans (scan_id, farmer_phone, timestamp, latitude, longitude, disease, confidence) 
-           VALUES ($1, $2, $3, $4, $5, $6, $7) 
+          `INSERT INTO manual_scans (scan_id, farmer_phone, timestamp, latitude, longitude, disease, confidence)
+           VALUES ($1, $2, $3, $4, $5, $6, $7)
            ON CONFLICT (scan_id) DO NOTHING`,
           [
             s.id, // we stored scan.id in SQLite mapped as scan_id here

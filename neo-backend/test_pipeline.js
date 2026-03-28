@@ -5,14 +5,14 @@ require('dotenv').config();
 
 async function runTest() {
   console.log('\n--- 🚀 STARTING NEOGARI E2E PIPELINE TEST ---');
-  
+
   const phone = '+919999999999';
   const JWT_SECRET = process.env.JWT_SECRET || 'super-secret-neoagri';
   const dbUrl = process.env.DATABASE_URL || 'postgresql://postgres:password@localhost:5433/neoagri';
-  
+
   // 1. Manually forge a JWT session token
   const token = jwt.sign({ phone }, JWT_SECRET, { expiresIn: '7d' });
-  
+
   const pool = new Pool({ connectionString: dbUrl });
   await pool.query('INSERT INTO farmers (phone) VALUES ($1) ON CONFLICT DO NOTHING', [phone]);
   console.log('✅ 1. Mock Farmer Authenticated with forged JWT.');

@@ -37,7 +37,7 @@ export default function LoginScreen() {
   };
 
   return (
-    <KeyboardAvoidingView 
+    <KeyboardAvoidingView
       style={styles.container}
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
     >
@@ -69,8 +69,8 @@ export default function LoginScreen() {
               />
             </View>
 
-            <TouchableOpacity 
-              style={[styles.btn, (phoneNumber.length < 10 || loading) && styles.btnDisabled]} 
+            <TouchableOpacity
+              style={[styles.btn, (phoneNumber.length < 10 || loading) && styles.btnDisabled]}
               onPress={handleSendOtp}
               disabled={phoneNumber.length < 10 || loading}
             >
@@ -81,7 +81,7 @@ export default function LoginScreen() {
         ) : (
           <View style={styles.form}>
             <Text style={styles.phoneLabel}>+91 {phoneNumber} पर OTP भेजा गया</Text>
-            
+
             <View style={styles.inputContainer}>
               <Ionicons name="keypad-outline" size={20} color="#7f8c8d" style={styles.inputIcon} />
               <TextInput
@@ -96,8 +96,8 @@ export default function LoginScreen() {
               />
             </View>
 
-            <TouchableOpacity 
-              style={[styles.btn, (otp.length < 4 || loading) && styles.btnDisabled]} 
+            <TouchableOpacity
+              style={[styles.btn, (otp.length < 4 || loading) && styles.btnDisabled]}
               onPress={handleVerify}
               disabled={otp.length < 4 || loading}
             >
