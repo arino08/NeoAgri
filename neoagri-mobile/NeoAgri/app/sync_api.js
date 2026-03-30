@@ -3,7 +3,7 @@ import { SQLite } from 'expo-sqlite';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 // API CONSTANTS
-export const API_URL = 'http://192.168.1.100:3000'; // Replace with PROD or dynamic IP
+export const API_URL = 'http://192.168.0.173:3000'; // Replace with PROD or dynamic IP
 
 export const getAuthToken = async () => {
   return await AsyncStorage.getItem('user_token');
