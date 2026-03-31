@@ -118,3 +118,32 @@ SELECT * FROM manual_scans;
 ```
 
 If the rows match your test data, the pipeline is 100% functional!
+
+---
+
+## 🏆 Step 4: Testing the Hackathon "Wow" Features
+
+### 1. Live Mission Control Dashboard
+Our real-time command center watches for drone payloads and farmer manual scans.
+1. Make sure your `neo-backend` node server is running.
+2. Open a web browser on your PC and navigate to: `http://localhost:3000/`
+3. You will see a dark-mode military-style map tracking stats.
+4. **Trigger an event:** Run `node trigger_drone_scan.js` in your terminal, or capture a leaf in the React Native app while online.
+5. Watch the dashboard instantly update via WebSocket, dropping a pulsing red pin on the map and showing live logs.
+
+### 2. AR "Geiger" GPS Navigation
+Test the gamified compass tool used to find infected crops in the field.
+1. Run the app on a **Physical Android Device** (Emulators don't have accurate magnetometers).
+2. Tap "Start Navigation" from the home screen to find a detected disease marker.
+3. Rotate your phone: The compass arrow should rotate physically, tracking the geographic heading of the infected plant.
+4. As the distance closes (under 10 meters), you should feel physical haptic vibrations accelerating, mimicking a Geiger counter.
+
+### 3. WhatsApp / SMS Fallback Bot (Non-Smartphone Users)
+Instead of forcing marginalized farmers to use a 5G app, they can use regular SMS/WhatsApp. We configured a TwiML webhook on the Express server.
+1. Open a new terminal to simulate a Twilio webhook POST request:
+    ```bash
+    curl -X POST http://localhost:3000/bot/whatsapp \
+      -H "Content-Type: application/x-www-form-urlencoded" \
+      -d "Body=caterpillar"
+    ```
+2. You should see a formatted XML response returning the recommended organic cure in text. This can easily be hooked up to Twilio + ngrok for a live WhatsApp number.

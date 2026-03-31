@@ -25,3 +25,8 @@
 - [x] Integrate MSG91 / Twilio SMS logic inside `POST /auth/otp/send`
 - [x] Finalize Expo SMS Retriever auto-read on Android inside `<LoginScreen/>`
 - [x] Test the full physical pipeline (Station -> Node backend -> Wi-Fi pull -> Offline Scan -> Wi-Fi flush).
+
+## Hackathon Polish
+- [x] Feature 1: Live Mission Control Dashboard (`neo-backend/public/index.html` + `socket.io` in Express).
+- [x] Feature 2: AR Geiger Navigation (Integrated `Magnetometer` + `Haptics` in `navigate.js`).
+- [x] Feature 3: WhatsApp/SMS Fallback Bot for Non-Smartphone users.

@@ -2,6 +2,8 @@ import React, { useState, useEffect, useRef } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Alert, SafeAreaView, Dimensions } from 'react-native';
 import * as Location from 'expo-location';
 import * as Speech from 'expo-speech';
+import { Magnetometer } from 'expo-sensors';
+import * as Haptics from 'expo-haptics';
 import { calculateDistance, calculateBearing, getDirectionText } from '../utils/haversine';
 import { getAllMarkers } from '../db/schema';
 import { Ionicons } from '@expo/vector-icons';
@@ -16,13 +18,20 @@ export default function NavigationScreen() {
   const [distance, setDistance] = useState(null);
   const [direction, setDirection] = useState('');
   const [isNavigating, setIsNavigating] = useState(false);
+  const [heading, setHeading] = useState(0);
+  const [targetBearing, setTargetBearing] = useState(0);
   const locationSubscription = useRef(null);
+  const magnetoSubscription = useRef(null);
   const lastSpokenRef = useRef(0);
 
   useEffect(() => {
+    Magnetometer.setUpdateInterval(100);
     return () => {
       if (locationSubscription.current) {
         locationSubscription.current.remove();
+      }
+      if (magnetoSubscription.current) {
+        magnetoSubscription.current.remove();
       }
     };
   }, []);
@@ -43,6 +52,12 @@ export default function NavigationScreen() {
 
     Speech.speak('मार्गदर्शन शुरू हो रहा है।', { language: 'hi-IN' });
     setIsNavigating(true);
+
+    magnetoSubscription.current = Magnetometer.addListener((data) => {
+      let currentHeading = Math.atan2(data.y, data.x) * (180 / Math.PI);
+      if (currentHeading < 0) currentHeading += 360;
+      setHeading(currentHeading);
+    });
 
     locationSubscription.current = await Location.watchPositionAsync(
       {
@@ -70,8 +85,16 @@ export default function NavigationScreen() {
         if (closest) {
           setNearestMarker(closest);
           setDistance(Math.round(minDistance));
+          setTargetBearing(bestBearing);
           const dirText = getDirectionText(bestBearing);
           setDirection(dirText);
+
+          // Haptics feedback based on distance
+          if (minDistance < 10) {
+            Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
+          } else if (minDistance < 25) {
+            Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+          }
 
           const now = Date.now();
           if (now - lastSpokenRef.current > 10000) {
@@ -94,9 +117,15 @@ export default function NavigationScreen() {
       locationSubscription.current.remove();
       locationSubscription.current = null;
     }
+    if (magnetoSubscription.current) {
+      magnetoSubscription.current.remove();
+      magnetoSubscription.current = null;
+    }
     setIsNavigating(false);
     Speech.stop();
   };
+
+  const pointerAngle = (targetBearing - heading + 360) % 360;
 
   return (
     <SafeAreaView style={styles.container}>
@@ -119,10 +148,10 @@ export default function NavigationScreen() {
               </View>
 
               <View style={styles.radarContainer}>
-                <View style={styles.radarCircle1}>
-                  <View style={styles.radarCircle2}>
-                    <View style={styles.radarCenter}>
-                      <Ionicons name="navigate" size={40} color="#fff" style={{ transform: [{ rotate: '45deg' }] }} />
+                <View style={[styles.radarCircle1, distance < 10 && {backgroundColor: 'rgba(231, 76, 60, 0.2)'}]}>
+                  <View style={[styles.radarCircle2, distance < 10 && {backgroundColor: 'rgba(231, 76, 60, 0.4)'}]}>
+                    <View style={[styles.radarCenter, distance < 10 && {backgroundColor: '#e74c3c'}]}>
+                      <Ionicons name="navigate" size={40} color="#fff" style={{ transform: [{ rotate: `${pointerAngle}deg` }] }} />
                     </View>
                   </View>
                 </View>
@@ -159,7 +188,7 @@ export default function NavigationScreen() {
           <Text style={styles.idleSubtitle}>
             ड्रोन द्वारा चिन्हित किए गए बीमार पौधों तक पहुंचने के लिए GPS नेविगेशन चालू करें।
           </Text>
-          
+
           <TouchableOpacity style={styles.btnStart} onPress={startNavigation}>
              <Text style={styles.btnStartText}>नेविगेशन शुरू करें (Start)</Text>
              <Ionicons name="chevron-forward" size={24} color="#fff" />

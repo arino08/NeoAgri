@@ -1,13 +1,25 @@
 const express = require('express');
+const http = require('http');
+const { Server } = require('socket.io');
 const cors = require('cors');
 const { Pool } = require('pg');
 const jwt = require('jsonwebtoken');
 const twilio = require('twilio');
+const path = require('path');
 require('dotenv').config();
 
 const app = express();
+const server = http.createServer(app);
+const io = new Server(server, { cors: { origin: '*' } });
+
 app.use(cors());
 app.use(express.json());
+app.use(express.static(path.join(__dirname, 'public')));
+
+io.on('connection', (socket) => {
+  console.log('[WS] Client connected to live dashboard');
+  socket.on('disconnect', () => console.log('[WS] Client disconnected'));
+});
 
 // Postgres Setup
 const pool = new Pool({
@@ -138,6 +150,15 @@ app.post('/session/create', authenticateToken, async (req, res) => {
       }
     }
 
+    // Broadcast to Live Dashboard viewers
+    io.emit('new_drone_session', {
+      sessionId,
+      farmId,
+      droneId,
+      phone,
+      markers: markers || []
+    });
+
     res.json({ success: true, sessionId, capturesProcessed: markers?.length || 0 });
   } catch (err) {
     console.error('[DRONE-ERROR]', err);
@@ -215,6 +236,12 @@ app.post('/scan/sync', authenticateToken, async (req, res) => {
           ]
         );
       }
+
+      // Broadcast manual scan sync to Dashboard
+      io.emit('new_manual_scans', {
+        phone,
+        scans
+      });
     }
     res.json({ success: true, syncedCount: scans?.length || 0 });
   } catch (err) {
@@ -222,7 +249,25 @@ app.post('/scan/sync', authenticateToken, async (req, res) => {
   }
 });
 
+// --- WHATSAPP / SMS FALLBACK BOT ---
+const { MessagingResponse } = twilio.twiml;
+
+app.post('/bot/whatsapp', express.urlencoded({ extended: true }), (req, res) => {
+  const incomingMsg = req.body.Body.toLowerCase();
+  const twiml = new MessagingResponse();
+
+  if (incomingMsg.includes('caterpillar') || incomingMsg.includes('pest')) {
+    twiml.message('NeoAgri AI Alert: Caterpillar detected. Use 5% Neem Oil spray mixed with water. Apply during early morning or late evening for best results.');
+  } else if (incomingMsg.includes('gps') || incomingMsg.includes('location')) {
+    twiml.message('NeoAgri Status: Drone scan initialized for your area. We will notify you if anomalies are found.');
+  } else {
+    twiml.message('Welcome to NeoAgri Offline Assist (Hindi/English).\nText the disease name (e.g. Caterpillar) for instant organic cures, or send your GPS to receive local drone scan updates.');
+  }
+
+  res.type('text/xml').send(twiml.toString());
+});
+
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, '0.0.0.0', () => {
+server.listen(PORT, '0.0.0.0', () => {
   console.log(`Server running on port ${PORT}`);
 });
