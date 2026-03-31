@@ -18,8 +18,14 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 io.on('connection', (socket) => {
   console.log('[WS] Client connected to live dashboard');
+  // Send current active requests on connect
+  socket.emit('initial_drone_requests', droneRequests);
   socket.on('disconnect', () => console.log('[WS] Client disconnected'));
 });
+
+// Mock Database for Rental Requests
+let droneRequests = [];
+let requestCounter = 1;
 
 // Postgres Setup
 const pool = new Pool({
@@ -254,17 +260,98 @@ const { MessagingResponse } = twilio.twiml;
 
 app.post('/bot/whatsapp', express.urlencoded({ extended: true }), (req, res) => {
   const incomingMsg = req.body.Body.toLowerCase();
+  const incomingPhone = req.body.From || 'Unknown';
   const twiml = new MessagingResponse();
 
   if (incomingMsg.includes('caterpillar') || incomingMsg.includes('pest')) {
     twiml.message('NeoAgri AI Alert: Caterpillar detected. Use 5% Neem Oil spray mixed with water. Apply during early morning or late evening for best results.');
-  } else if (incomingMsg.includes('gps') || incomingMsg.includes('location')) {
-    twiml.message('NeoAgri Status: Drone scan initialized for your area. We will notify you if anomalies are found.');
+  } else if (incomingMsg.includes('rent') || incomingMsg.includes('gps') || incomingMsg.includes('location')) {
+    // Mock parsing "rent 5 at 26.2, 78.1"
+    const acres = incomingMsg.match(/[0-9]+(?=\s*acre)/i)?.[0] || 5;
+    const reqObj = {
+      id: `R-${Date.now()}`,
+      phone: incomingPhone,
+      acres: parseInt(acres),
+      cost: parseInt(acres) * 500, // ₹500/acre
+      lat: 26.2495 + (Math.random()*0.01 - 0.005), // near IIITM
+      lng: 78.1740 + (Math.random()*0.01 - 0.005),
+      status: 'pending'
+    };
+    droneRequests.push(reqObj);
+    io.emit('new_drone_request', reqObj);
+    twiml.message(`NeoAgri Service: We received your request to scan ${acres} acres using a rental drone. Cost will be ₹${reqObj.cost}. You will be notified when the drone completes its scan.`);
   } else {
-    twiml.message('Welcome to NeoAgri Offline Assist (Hindi/English).\nText the disease name (e.g. Caterpillar) for instant organic cures, or send your GPS to receive local drone scan updates.');
+    twiml.message('Welcome to NeoAgri Offline Assist (Hindi/English).\nText the disease name (e.g. Caterpillar) for instant organic cures, or send "Rent 5 acres" to request a drone scan.');
   }
 
   res.type('text/xml').send(twiml.toString());
+});
+
+// --- DRONE DISPATCH SIMULATOR ---
+app.post('/drone/dispatch', async (req, res) => {
+  const { requestId } = req.body;
+  const dfReq = droneRequests.find(r => r.id === requestId);
+
+  if (!dfReq) return res.status(404).json({ error: "Request not found" });
+  if (dfReq.status !== 'pending') return res.status(400).json({ error: "Already dispatched" });
+
+  dfReq.status = 'dispatched';
+  io.emit('drone_status_update', dfReq);
+
+  // Simulate generating scan points around the requested lat/lng
+  const sessionId = 'S-' + Date.now();
+  const markers = [];
+  const diseases = ['Healthy_Soyabean', 'Caterpillar_Pest_Attack', 'Diabrotica_speciosa', 'Healthy_Soyabean'];
+
+  for(let i=0; i<dfReq.acres; i++) {
+     markers.push({
+        type: 'leaf_capture',
+        payload: {
+           capture_id: require('crypto').randomUUID(),
+           latitude: dfReq.lat + (Math.random() * 0.004 - 0.002),
+           longitude: dfReq.lng + (Math.random() * 0.004 - 0.002),
+           timestamp_utc: new Date().toISOString(),
+           model_result: { disease: diseases[Math.floor(Math.random() * diseases.length)], confidence: 0.85 + (Math.random() * 0.14) },
+           leaf_image_b64: "dummy_b64"
+        }
+     });
+  }
+
+  // Insert to DB using mock logic
+  try {
+    // Ensure farmer exists before inserting drone_session
+    await pool.query(
+      `INSERT INTO farmers (phone) VALUES ($1) ON CONFLICT (phone) DO NOTHING`,
+      [dfReq.phone]
+    );
+
+    await pool.query(
+      `INSERT INTO drone_sessions (session_id, farmer_phone, farm_id, drone_id) VALUES ($1, $2, $3, $4)`,
+      [sessionId, dfReq.phone, 'RENTAL-FARM', 'RENT-DR-01']
+    );
+
+    for (const m of markers) {
+      const p = m.payload;
+      await pool.query(
+        `INSERT INTO drone_markers (capture_id, session_id, latitude, longitude, timestamp_utc, disease, confidence, status)
+         VALUES ($1, $2, $3, $4, $5, $6, $7, $8)`,
+        [p.capture_id, sessionId, p.latitude, p.longitude, new Date(p.timestamp_utc), p.model_result.disease, p.model_result.confidence, 'unverified']
+      );
+    }
+
+    // Broadcast
+    io.emit('new_drone_session', {
+      sessionId, farmId: 'RENTAL-FARM', droneId: 'RENT-DR-01', phone: dfReq.phone, markers
+    });
+
+    dfReq.status = 'completed';
+    io.emit('drone_status_update', dfReq);
+
+    res.json({ success: true, message: "Drone dispatched and data simulated", sessionId });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Failed to dispatch" });
+  }
 });
 
 const PORT = process.env.PORT || 3000;

@@ -14,9 +14,15 @@
     .log-panel { max-height: 200px; overflow-y: auto; background-color: #1e293b; border-radius: 0.5rem; padding: 1rem; margin-top: 1rem; font-family: monospace;}
     .pulse-dot {
       width: 12px; height: 12px;
-      background-color: #ef4444;
+      background-color: #ef4444; /* red */
       border-radius: 50%;
       animation: pulse 1.5s infinite;
+    }
+    .safe-dot {
+      width: 10px; height: 10px;
+      background-color: #22c55e; /* green */
+      border-radius: 50%;
+      border: 1px solid #166534;
     }
     @keyframes pulse {
       0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7); }
@@ -26,7 +32,7 @@
   </style>
 </head>
 <body class="p-6">
-  
+
   <header class="flex justify-between items-center mb-6">
     <div>
       <h1 class="text-3xl font-extrabold text-emerald-400">NeoAgri CommandCenter</h1>
@@ -43,10 +49,10 @@
     <div class="w-full md:w-3/4 flex flex-col">
       <div id="map"></div>
     </div>
-    
+
     <!-- Stats & Logs -->
     <div class="w-full md:w-1/4 flex flex-col space-y-4">
-      
+
       <!-- Stats Box -->
       <div class="bg-slate-800 p-4 rounded-lg border border-slate-700">
         <h3 class="font-bold text-slate-300 mb-2 uppercase text-xs tracking-widest">Global Stats</h3>
@@ -59,6 +65,17 @@
             <div class="text-xs text-slate-400">Diseases Found</div>
             <div class="text-2xl font-bold text-rose-400" id="stat-diseases">0</div>
           </div>
+        </div>
+      </div>
+
+      <!-- Drone Dispatch -->
+      <div class="bg-slate-800 p-4 rounded-lg border border-slate-700 flex flex-col max-h-64">
+        <h3 class="font-bold text-yellow-400 mb-2 uppercase text-xs tracking-widest flex justify-between">
+          <span>Drone Dispatch Requests</span>
+          <span id="req-count" class="bg-yellow-500 text-black px-2 rounded-full">0</span>
+        </h3>
+        <div id="request-list" class="flex-1 overflow-y-auto space-y-2 pr-1">
+          <div class="text-xs text-slate-500 italic">No pending requests...</div>
         </div>
       </div>
 
@@ -77,9 +94,9 @@
     // Default location (e.g., ABV IIITM or a farm in MP)
     const DEFAULT_LAT = 26.2495;
     const DEFAULT_LNG = 78.1740;
-    
+
     const map = L.map('map').setView([DEFAULT_LAT, DEFAULT_LNG], 13);
-    
+
     L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
       attribution: '&copy; <a href="https://carto.com/">CARTO</a>'
     }).addTo(map);
@@ -89,11 +106,17 @@
       iconSize: [40, 40],
       iconAnchor: [20, 20]
     });
-    
+
     const diseaseIcon = L.divIcon({
       className: 'pulse-dot',
       iconSize: [12, 12],
       iconAnchor: [6, 6]
+    });
+
+    const safeIcon = L.divIcon({
+      className: 'safe-dot',
+      iconSize: [10, 10],
+      iconAnchor: [5, 5]
     });
 
     let stats = { sessions: 0, diseases: 0 };
@@ -114,22 +137,90 @@
     // Socket.io connection
     const socket = io();
 
+    // Requests State
+    let pendingRequests = [];
+
+    const formatCurrency = (amt) => new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR' }).format(amt);
+
+    const renderRequests = () => {
+      const container = document.getElementById('request-list');
+      document.getElementById('req-count').innerText = pendingRequests.length;
+      if (pendingRequests.length === 0) {
+        container.innerHTML = `<div class="text-xs text-slate-500 italic">No pending requests...</div>`;
+        return;
+      }
+      container.innerHTML = pendingRequests.map(req => `
+        <div class="bg-slate-700 p-2 rounded relative border border-slate-600">
+          <div class="text-xs text-slate-300 font-bold mb-1">${req.phone}</div>
+          <div class="text-xs text-slate-400 mb-2">${req.acres} Acres &bull; <span class="text-emerald-400 font-bold">${formatCurrency(req.cost)}</span></div>
+          <button onclick="dispatchDrone('${req.id}', ${req.lat}, ${req.lng})" class="w-full bg-yellow-600 hover:bg-yellow-500 text-black text-xs font-bold py-1 rounded transition-colors">
+            Deploy Drone
+          </button>
+        </div>
+      `).join('');
+    };
+
+    window.dispatchDrone = async (id, lat, lng) => {
+      addLog(`Initiating dispatch sequence for request ${id}...`);
+      map.flyTo([lat, lng], 14, { duration: 2 });
+
+      try {
+        const res = await fetch('/drone/dispatch', {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({ requestId: id })
+        });
+        const data = await res.json();
+        if(data.success) {
+           addLog(`Drone Dispatched! Session: ${data.sessionId}`);
+        } else {
+           addLog(`Dispatch failed: ${data.error}`, true);
+        }
+      } catch (err) {
+        addLog(`Dispatch error: ${err.message}`, true);
+      }
+    };
+
     socket.on('connect', () => {
       addLog('WebSocket Connection Established.', false);
+    });
+
+    socket.on('initial_drone_requests', (reqs) => {
+      pendingRequests = reqs.filter(r => r.status === 'pending');
+      renderRequests();
+    });
+
+    socket.on('new_drone_request', (req) => {
+      pendingRequests.push(req);
+      renderRequests();
+      addLog(`NEW RENTAL REQUEST: ${req.acres} acres from ${req.phone}.`);
+      // Flash the map
+      L.marker([req.lat, req.lng]).addTo(map).bindPopup('Dispatch Request').openPopup();
+    });
+
+    socket.on('drone_status_update', (req) => {
+      if (req.status !== 'pending') {
+        pendingRequests = pendingRequests.filter(r => r.id !== req.id);
+        renderRequests();
+      }
     });
 
     // Handle new Drone Session from website_station_backend (Mock Drone)
     socket.on('new_drone_session', (data) => {
       stats.sessions++;
       addLog(`DRONE SYNC: Farm ${data.farmId} by ${data.phone}. ${data.markers.length} captures.`);
-      
+
       data.markers.forEach(m => {
         if(m.type === 'leaf_capture') {
           const p = m.payload;
           if (p.model_result && p.model_result.disease) {
-            stats.diseases++;
+            const isHealthy = p.model_result.disease.toLowerCase().includes('healthy');
+            const iconToUse = isHealthy ? safeIcon : diseaseIcon;
+
+            if (!isHealthy) stats.diseases++;
+
             // Plot on Map
-            L.marker([p.latitude, p.longitude], { icon: diseaseIcon })
+            L.marker([p.latitude, p.longitude], { icon: iconToUse })
               .addTo(map)
               .bindPopup(`<b>${p.model_result.disease}</b><br/>Confidence: ${(p.model_result.confidence*100).toFixed(1)}%`);
           }
@@ -144,8 +235,12 @@
     socket.on('new_manual_scans', (data) => {
       addLog(`MANUAL SYNC: ${data.phone} uploaded ${data.scans.length} verified scans.`);
       data.scans.forEach(s => {
-        stats.diseases++;
-        L.marker([s.latitude, s.longitude], { icon: diseaseIcon })
+        const isHealthy = s.disease && s.disease.toLowerCase().includes('healthy');
+        const iconToUse = isHealthy ? safeIcon : diseaseIcon;
+
+        if (!isHealthy) stats.diseases++;
+
+        L.marker([s.latitude, s.longitude], { icon: iconToUse })
           .addTo(map)
           .bindPopup(`<b>Farmer Confirmed: ${s.disease}</b><br/>Confidence: ${(s.confidence*100).toFixed(1)}%`);
         map.flyTo([s.latitude, s.longitude], 16);
