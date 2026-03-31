@@ -40,23 +40,30 @@ export const initDB = async () => {
   console.log('[SQLite] Database Initialized');
 };
 
+const ensureDBReady = async () => {
+  if (!db) {
+    await initDB();
+  }
+  return db;
+};
+
 export const getDB = () => db;
 
 // ---- DB Operations ----
 
 export const insertSession = async (session) => {
-  if (!db) return;
-  await db.runAsync(
+  const database = await ensureDBReady();
+  await database.runAsync(
     'INSERT OR REPLACE INTO sessions (id, date_created, total_markers, sync_status) VALUES (?, ?, ?, ?)',
     [session.id, session.date_created, session.total_markers, 'synced']
   );
 };
 
 export const insertMarkers = async (markers) => {
-  if (!db) return;
+  const database = await ensureDBReady();
   for (const marker of markers) {
     const payload = marker.payload || marker;
-    await db.runAsync(
+    await database.runAsync(
       `INSERT OR REPLACE INTO markers (id, session_id, latitude, longitude, disease, confidence, image_b64, status)
        VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
       [
@@ -74,14 +81,20 @@ export const insertMarkers = async (markers) => {
 };
 
 export const getOfflineMarkers = async () => {
-  if (!db) return [];
-  const result = await db.getAllAsync('SELECT * FROM markers WHERE status = ?', ['pending']);
+  const database = await ensureDBReady();
+  const result = await database.getAllAsync('SELECT * FROM markers WHERE status = ?', ['pending']);
+  return result;
+};
+
+export const getAllMarkers = async () => {
+  const database = await ensureDBReady();
+  const result = await database.getAllAsync('SELECT * FROM markers ORDER BY rowid DESC');
   return result;
 };
 
 export const insertManualScan = async (scan) => {
-  if (!db) return;
-  await db.runAsync(
+  const database = await ensureDBReady();
+  await database.runAsync(
     `INSERT INTO manual_scans (id, timestamp, latitude, longitude, disease, confidence, sync_status)
      VALUES (?, ?, ?, ?, ?, ?, 'pending')`,
     [
@@ -96,14 +109,15 @@ export const insertManualScan = async (scan) => {
 };
 
 export const getPendingScans = async () => {
-  if (!db) return [];
-  return await db.getAllAsync('SELECT * FROM manual_scans WHERE sync_status = ?', ['pending']);
+  const database = await ensureDBReady();
+  return await database.getAllAsync('SELECT * FROM manual_scans WHERE sync_status = ?', ['pending']);
 };
 
 export const markScansSynced = async (scanIds) => {
-  if (!db || !scanIds.length) return;
+  if (!scanIds.length) return;
+  const database = await ensureDBReady();
   const placeholders = scanIds.map(() => '?').join(',');
-  await db.runAsync(
+  await database.runAsync(
     `UPDATE manual_scans SET sync_status = 'synced' WHERE id IN (${placeholders})`,
     scanIds
   );

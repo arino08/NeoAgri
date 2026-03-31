@@ -1,5 +1,5 @@
 import { initDB, insertSession, insertMarkers, getPendingScans, markScansSynced } from './schema';
-import { fetchDroneMarkers, syncOfflineScans } from '../sync_api';
+import { fetchDroneMarkers, fetchFarmerHistory, syncOfflineScans } from '../sync_api';
 import NetInfo from '@react-native-community/netinfo';
 
 export const initializeOfflineSync = async () => {
@@ -31,6 +31,27 @@ export const pullDroneSessions = async (sessionId) => {
     }
   } else {
     console.log('[Sync] Offline: Cannot pull drone sessions right now. Operating from cache.');
+  }
+};
+
+export const syncLatestDroneSession = async () => {
+  const state = await NetInfo.fetch();
+  if (!state.isConnected) {
+    return { synced: false, reason: 'offline' };
+  }
+
+  try {
+    const history = await fetchFarmerHistory();
+    if (!history.length) {
+      return { synced: false, reason: 'no_history' };
+    }
+
+    const latestSessionId = history[0].session_id;
+    await pullDroneSessions(latestSessionId);
+    return { synced: true, sessionId: latestSessionId };
+  } catch (error) {
+    console.error('[Sync] Failed to sync latest session:', error);
+    return { synced: false, reason: 'error' };
   }
 };
 

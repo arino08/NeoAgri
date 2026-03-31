@@ -1,12 +1,14 @@
 // src/services/SyncService.js
-import { SQLite } from 'expo-sqlite';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import * as SecureStore from 'expo-secure-store';
 
 // API CONSTANTS
 export const API_URL = 'http://192.168.0.173:3000'; // Replace with PROD or dynamic IP
 
+const TOKEN_KEY = 'user_token';
+const PHONE_KEY = 'user_phone';
+
 export const getAuthToken = async () => {
-  return await AsyncStorage.getItem('user_token');
+  return await SecureStore.getItemAsync(TOKEN_KEY);
 };
 
 export const requestOtp = async (phone) => {
@@ -32,8 +34,8 @@ export const verifyOtp = async (phone, otp) => {
     });
     const data = await res.json();
     if (data.token) {
-      await AsyncStorage.setItem('user_token', data.token);
-      await AsyncStorage.setItem('user_phone', phone);
+      await SecureStore.setItemAsync(TOKEN_KEY, data.token);
+      await SecureStore.setItemAsync(PHONE_KEY, phone);
     }
     return data;
   } catch (e) {
@@ -74,6 +76,30 @@ export const fetchDroneMarkers = async (sessionId) => {
     return result.markers || [];
   } catch (err) {
     console.error('Fetch Markers Error', err);
+    return [];
+  }
+};
+
+export const fetchFarmerHistory = async () => {
+  try {
+    const token = await getAuthToken();
+    if (!token) return [];
+
+    const response = await fetch(`${API_URL}/farmer/history`, {
+      method: 'GET',
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    if (!response.ok) {
+      return [];
+    }
+
+    const result = await response.json();
+    return result.history || [];
+  } catch (err) {
+    console.error('Fetch History Error', err);
     return [];
   }
 };

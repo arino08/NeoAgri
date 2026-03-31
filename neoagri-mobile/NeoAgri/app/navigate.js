@@ -5,7 +5,8 @@ import * as Speech from 'expo-speech';
 import { Magnetometer } from 'expo-sensors';
 import * as Haptics from 'expo-haptics';
 import { calculateDistance, calculateBearing, getDirectionText } from '../utils/haversine';
-import { getAllMarkers } from '../db/schema';
+import { getAllMarkers } from './db/schema';
+import { syncLatestDroneSession } from './db/offlineSync';
 import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -43,7 +44,9 @@ export default function NavigationScreen() {
       return;
     }
 
-    const markers = getAllMarkers();
+    await syncLatestDroneSession();
+    const markers = await getAllMarkers();
+
     if (markers.length === 0) {
       Speech.speak('खेत में कोई बीमारी नहीं मिली।', { language: 'hi-IN' });
       Alert.alert("No disease markers found in database.");
@@ -74,11 +77,18 @@ export default function NavigationScreen() {
         let bestBearing = 0;
 
         markers.forEach(marker => {
-          const dist = calculateDistance(latitude, longitude, marker.lat, marker.lng);
+          const markerLat = Number(marker.latitude ?? marker.lat);
+          const markerLng = Number(marker.longitude ?? marker.lng);
+
+          if (Number.isNaN(markerLat) || Number.isNaN(markerLng)) {
+            return;
+          }
+
+          const dist = calculateDistance(latitude, longitude, markerLat, markerLng);
           if (dist < minDistance) {
             minDistance = dist;
             closest = marker;
-            bestBearing = calculateBearing(latitude, longitude, marker.lat, marker.lng);
+            bestBearing = calculateBearing(latitude, longitude, markerLat, markerLng);
           }
         });
 
