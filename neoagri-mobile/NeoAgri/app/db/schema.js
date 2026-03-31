@@ -3,7 +3,7 @@ import * as SQLite from 'expo-sqlite';
 let db;
 
 export const initDB = async () => {
-  db = await SQLite.openDatabaseAsync('neoagri.db');
+  db = await SQLite.openDatabaseAsync('neoagri_v2.db');
 
   await db.execAsync(`
     PRAGMA journal_mode = WAL;
