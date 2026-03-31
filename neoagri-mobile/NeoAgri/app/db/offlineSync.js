@@ -7,7 +7,7 @@ export const initializeOfflineSync = async () => {
 
   // Listen for internet connection restoration to flush queue
   NetInfo.addEventListener(state => {
-    if (state.isConnected) {
+    if (state.isConnected !== false) {
       console.log('[Sync] Network restored, triggering background sync...');
       flushOfflineScans();
     }
@@ -16,7 +16,7 @@ export const initializeOfflineSync = async () => {
 
 export const pullDroneSessions = async (sessionId) => {
   const state = await NetInfo.fetch();
-  if (state.isConnected) {
+  if (state.isConnected !== false) {
     try {
       console.log(`[Sync] Fetching latest markers for session: ${sessionId}`);
       const markers = await fetchDroneMarkers(sessionId);
@@ -36,7 +36,7 @@ export const pullDroneSessions = async (sessionId) => {
 
 export const syncLatestDroneSession = async () => {
   const state = await NetInfo.fetch();
-  if (!state.isConnected) {
+  if (state.isConnected === false && state.isInternetReachable === false) { console.log('[Sync] Force assuming offline');
     return { synced: false, reason: 'offline' };
   }
 

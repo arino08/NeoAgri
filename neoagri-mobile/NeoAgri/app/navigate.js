@@ -49,7 +49,7 @@ export default function NavigationScreen() {
 
     if (markers.length === 0) {
       Speech.speak('खेत में कोई बीमारी नहीं मिली।', { language: 'hi-IN' });
-      Alert.alert("No disease markers found in database.");
+      Alert.alert("No disease markers found in database. Did the backend fetch fail? Please check your terminal for logs.");
       return;
     }
 
